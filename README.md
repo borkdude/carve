@@ -6,6 +6,10 @@ Carve out the essentials of your Clojure app.
 
 Carve will search through your code for unused vars and will remove them.
 
+## Status
+
+Experimental. Breaking changes may happen. Feedback and bugfix PRs welcome.
+
 ## Installation
 
 Add to your `deps.edn` under the `:aliases` key:
@@ -17,10 +21,6 @@ Add to your `deps.edn` under the `:aliases` key:
 ```
 
 or use any later SHA.
-
-## Status
-
-Experimental. Breaking changes may happen.
 
 ## Usage
 
