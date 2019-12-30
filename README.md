@@ -73,6 +73,8 @@ Found unused var:
 (defn -main []
   (used-function))
 
+Type Y to remove or i to add app/another-unused-function to .carve_ignore
+i
 ...
 
 $ cat .carve_ignore
