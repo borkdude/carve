@@ -48,9 +48,10 @@
         _ (println)
         zloc (z/of-file file)
         locs->syms (into {}
-                         (keep (fn [{:keys [:row :col :ns :name :private]}]
-                                 (when (or (not (contains? ignore-namespaces ns))
-                                           private)
+                         (keep (fn [{:keys [:row :col :ns :name :private :test]}]
+                                 (when (and (not test)
+                                            (or (not (contains? ignore-namespaces ns))
+                                                private))
                                    [[row col] (symbol (str ns) (str name))])) vs))
         locs (keys locs->syms)
         locs (sort locs)
