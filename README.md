@@ -16,7 +16,7 @@ Add to your `deps.edn` under the `:aliases` key:
 
 ``` clojure
 :carve {:extra-deps {borkdude/carve {:git/url "https://github.com/borkdude/carve"
-                                     :sha "68453e4434624a3fbd15a0cdee007563367b008f"}}
+                                     :sha "284786098ef363dc52a49755687e9eb87ca41f59"}}
         :main-opts ["-m" "carve.main"]}
 ```
 
