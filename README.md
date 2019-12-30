@@ -24,7 +24,7 @@ or use any later SHA.
 
 ## Usage
 
-Currently `carve` only has one command line option, `-o` or `--opts` which
+Currently `carve` only has one command line option, `--opts`, which
 expects an EDN map of the following options of which only `:paths:` is required:
 
 - `:paths`: a list of paths to analyze
@@ -39,7 +39,7 @@ expects an EDN map of the following options of which only `:paths:` is required:
 - `:dry-run?`: just print the unused var expression.
 
 ``` shell
-$ clojure -A:carve -o '{:paths ["test-resources"] :dry-run? true}'
+$ clojure -A:carve --opts '{:paths ["test-resources"] :dry-run? true}'
 Carving test-resources/app.clj
 
 Found unused var:
@@ -56,7 +56,7 @@ Found unused var:
 ```
 
 ``` shell
-$ clojure -A:carve -o '{:paths ["test-resources"]}'
+$ clojure -A:carve --opts '{:paths ["test-resources"]}'
 Carving test-resources/app.clj
 
 Found unused var:
