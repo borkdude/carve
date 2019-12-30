@@ -44,9 +44,7 @@
 
 (defn carve [file vs {:keys [:out-dir :ignore-namespaces]
                       :as opts}]
-  (let [_ (println "Carving" file)
-        _ (println)
-        zloc (z/of-file file)
+  (let [zloc (z/of-file file)
         locs->syms (into {}
                          (keep (fn [{:keys [:row :col :ns :name :private :test]}]
                                  (when (and (not test)
@@ -55,6 +53,9 @@
                                    [[row col] (symbol (str ns) (str name))])) vs))
         locs (keys locs->syms)
         locs (sort locs)
+        _ (when (seq locs)
+            (println "Carving" file)
+            (println))
         {:keys [:made-changes? :zloc]}
         (remove-locs zloc locs locs->syms opts)]
     (when made-changes?
