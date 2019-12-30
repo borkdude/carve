@@ -8,7 +8,7 @@ Carve will search through your code for unused vars and will remove them.
 
 ## Status
 
-Experimental. Breaking changes may happen. Feedback and bugfix PRs welcome.
+Experimental. Use with caution! Breaking changes may happen. Feedback and bugfix PRs welcome.
 
 ## Installation
 
