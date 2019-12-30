@@ -10,7 +10,7 @@ Carve will search through your code for unused vars and will remove them.
 
 Add to your `deps.edn` under the `:aliases` key:
 
-```
+``` clojure
 :carve {:extra-deps {borkdude/carve {:git/url "https://github.com/borkdude/carve"
                                                 :sha "17c095d4e3b2d7b9b2a848a9bd032052f0418159"}}
                    :main-opts ["-m" "carve.main"]}
@@ -34,7 +34,7 @@ expects an EDN map of the following options:
 - `:out-dir`: instead of writing back to the original file, write to this dir.
 - `:dry-run?`: just print the unused var expression.
 
-```
+``` shell
 $ clojure -A:carve -o '{:paths ["test-resources"] :dry-run? true}'
 Carving test-resources/app.clj
 
@@ -51,7 +51,7 @@ Found unused var:
 ...
 ```
 
-```
+``` shell
 $ clojure -A:carve -o '{:paths ["test-resources"] :interactive? true}'
 Carving test-resources/app.clj
 
