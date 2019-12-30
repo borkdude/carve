@@ -31,7 +31,7 @@ clojure -A:carve --opts '{:paths ["src" "test"]}'
 ```
 
 Currently `carve` only has one command line option, `--opts`, which
-expects an EDN map of the following options of which only `:paths:` is required:
+expects an EDN map of the following options of which only `:paths` is required:
 
 - `:paths`: a list of paths to analyze
 - `:ignore-vars`: a list of vars to ignore
