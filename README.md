@@ -18,6 +18,10 @@ Add to your `deps.edn` under the `:aliases` key:
 
 or use any later SHA.
 
+## Status
+
+Experimental. Breaking changes may happen.
+
 ## Usage
 
 Currently `carve` only has one command line option, `-o` or `--opts` which
@@ -75,8 +79,6 @@ $ cat .carve_ignore
 app/another-unused-function
 app/-main
 ```
-
-## License
 
 ## License
 
