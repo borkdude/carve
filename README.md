@@ -24,7 +24,7 @@ or use any later SHA.
 
 ## Usage
 
-The usage for a typical Clojure app will be:
+The usage for a typical Clojure app looks like:
 
 ```
 clojure -A:carve --opts '{:paths ["src" "test"]}'
