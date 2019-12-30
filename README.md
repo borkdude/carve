@@ -27,7 +27,7 @@ or use any later SHA.
 The usage for a typical Clojure app will be:
 
 ```
-clojure -A:carve-local --opts '{:paths ["src" "test"]}'
+clojure -A:carve --opts '{:paths ["src" "test"]}'
 ```
 
 Currently `carve` only has one command line option, `--opts`, which
