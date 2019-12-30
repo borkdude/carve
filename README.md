@@ -25,7 +25,7 @@ or use any later SHA.
 ## Usage
 
 Currently `carve` only has one command line option, `-o` or `--opts` which
-expects an EDN map of the following options:
+expects an EDN map of the following options of which only `:paths:` is required:
 
 - `:paths`: a list of paths to analyze
 - `:ignore-vars`: a list of vars to ignore
