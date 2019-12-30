@@ -34,7 +34,7 @@ expects an EDN map of the following options of which only `:paths:` is required:
 - `:carve-ignore-file`: a file where ignored vars can be stored, `.carve_ignore`
   by default.
 - `:interactive?`: ask what to do with an unused var: remove from the file, add
-  to `.carve_ignore` or continue.
+  to `.carve_ignore` or continue. Set to `true` by default.
 - `:out-dir`: instead of writing back to the original file, write to this dir.
 - `:dry-run?`: just print the unused var expression.
 
@@ -56,7 +56,7 @@ Found unused var:
 ```
 
 ``` shell
-$ clojure -A:carve -o '{:paths ["test-resources"] :interactive? true}'
+$ clojure -A:carve -o '{:paths ["test-resources"]}'
 Carving test-resources/app.clj
 
 Found unused var:
