@@ -9,8 +9,7 @@
 (set! *warn-on-reflection* true)
 
 (defn -main [& [flag opts & _args]]
-  (when-not (or (= "-o" flag)
-                (= "--opts" flag))
+  (when-not (= "--opts" flag)
     (throw (ex-info (str "Unrecognized option: " flag) {:flag flag})))
   (let [opts (edn/read-string opts)
         opts (update opts :ignore-namespaces set)
