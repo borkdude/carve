@@ -22,7 +22,7 @@ Add to your `deps.edn` under the `:aliases` key:
 
 or use any later SHA.
 
-## How does this work?
+## How does it work?
 
 Carve invokes [clj-kondo](https://github.com/borkdude/clj-kondo) and uses the [analysis](https://github.com/borkdude/clj-kondo/tree/master/analysis) information to check which vars are unused. To remove the relevant bits of code it uses [rewrite-cljc](https://github.com/lread/rewrite-cljc-playground).
 
