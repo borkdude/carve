@@ -11,7 +11,7 @@
   (when-not (= "--opts" flag)
     (throw (ex-info (str "Unrecognized option: " flag) {:flag flag})))
   (let [opts (edn/read-string opts)
-        opts (update opts :ignore-namespaces set)
+        opts (update opts :api-namespaces set)
         opts (update opts :carve-ignore-file
                      (fn [ci]
                        (if (nil? ci) ".carve_ignore"

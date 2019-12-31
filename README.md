@@ -39,8 +39,7 @@ expects an EDN map of the following options of which only `:paths` is required:
 
 - `:paths`: a list of paths to analyze. Can be a mix of individual files and directories.
 - `:ignore-vars`: a list of vars to ignore. Useful for when the analyzer has it wrong or you just want to keep the var for whatever reason.
-- `:ignore-namespaces`: a list of namespaces to ignore. Useful for library APIs. Note: private vars are
-  still considered to be removed.
+- `:api-namespaces`: a list of namespaces of which only private vars are considered as unused.
 - `:carve-ignore-file`: a file where ignored vars can be stored, `.carve_ignore`
   by default.
 - `:interactive?`: ask what to do with an unused var: remove from the file, add

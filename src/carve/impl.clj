@@ -57,7 +57,7 @@
 (defn deftype? [defined-by]
   (= 'clojure.core/deftype defined-by))
 
-(defn carve [file vs {:keys [:out-dir :ignore-namespaces]
+(defn carve [file vs {:keys [:out-dir :api-namespaces]
                       :as opts}]
   (let [zloc (z/of-file file)
         locs->syms (into {}
@@ -65,7 +65,7 @@
                                             :defined-by]}]
                                  (when (and (not test)
                                             (not (deftype? defined-by))
-                                            (or (not (contains? ignore-namespaces ns))
+                                            (or (not (contains? api-namespaces ns))
                                                 private))
                                    [[row col] (symbol (str ns) (str name))])) vs))
         locs (keys locs->syms)
