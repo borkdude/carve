@@ -1,10 +1,9 @@
 (ns carve.main
   (:require
-   [clj-kondo.core :as clj-kondo]
    [carve.impl :as impl]
-   [clojure.set :as set]
+   [clj-kondo.core :as clj-kondo]
    [clojure.edn :as edn]
-   [clojure.java.io :as io]))
+   [clojure.set :as set]))
 
 (set! *warn-on-reflection* true)
 
@@ -20,9 +19,7 @@
         {:keys [:ignore-vars
                 :paths
                 :carve-ignore-file]} opts
-        ignore-file (io/file carve-ignore-file)
-        _ (when-not (.exists ignore-file) (.createNewFile ignore-file))
-        ignore-from-config (edn/read-string (format "[%s]" (slurp carve-ignore-file)))
+        ignore-from-config (impl/read-carve-ignore-file carve-ignore-file)
         ignore-from-config (map (fn [ep]
                                   [(symbol (namespace ep)) (symbol (name ep))])
                                 ignore-from-config)

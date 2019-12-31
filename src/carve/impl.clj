@@ -1,6 +1,7 @@
 (ns carve.impl
   {:no-doc true}
   (:require
+   [clojure.edn :as edn]
    [clojure.java.io :as io]
    [rewrite-cljc.node :as node]
    [rewrite-cljc.zip :as z]))
@@ -9,11 +10,21 @@
   [f coll]
   (persistent! (reduce #(assoc! %1 (f %2) %2) (transient {}) coll)))
 
+(defn read-carve-ignore-file [carve-ignore-file]
+  (let [ignore-file (io/file carve-ignore-file)]
+    (when (.exists ignore-file)
+      (edn/read-string (format "[%s]" (slurp carve-ignore-file))))))
+
+(defn add-to-carve-ignore-file [carve-ignore-file s]
+  (let [ignore-file (io/file carve-ignore-file)]
+    (when-not (.exists ignore-file) (.createNewFile ignore-file))
+    (spit carve-ignore-file s :append true)))
+
 (defn interactive [{:keys [:carve-ignore-file]} sym]
   (println (format "Type Y to remove or i to add %s to %s" sym carve-ignore-file))
   (let [input (read-line)]
     (when (= "i" input)
-      (spit carve-ignore-file (str sym "\n") :append true))
+      (add-to-carve-ignore-file carve-ignore-file (str sym "\n")))
     input))
 
 (defn remove-locs [zloc locs locs->syms {:keys [:interactive?
