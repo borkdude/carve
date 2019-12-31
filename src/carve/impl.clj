@@ -42,12 +42,17 @@
       {:zloc zloc
        :made-changes? made-changes?})))
 
+(defn deftype? [defined-by]
+  (= 'clojure.core/deftype defined-by))
+
 (defn carve [file vs {:keys [:out-dir :ignore-namespaces]
                       :as opts}]
   (let [zloc (z/of-file file)
         locs->syms (into {}
-                         (keep (fn [{:keys [:row :col :ns :name :private :test]}]
+                         (keep (fn [{:keys [:row :col :ns :name :private :test
+                                            :defined-by]}]
                                  (when (and (not test)
+                                            (not (deftype? defined-by))
                                             (or (not (contains? ignore-namespaces ns))
                                                 private))
                                    [[row col] (symbol (str ns) (str name))])) vs))
