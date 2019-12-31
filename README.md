@@ -22,6 +22,10 @@ Add to your `deps.edn` under the `:aliases` key:
 
 or use any later SHA.
 
+## How does this work?
+
+Carve invokes [clj-kondo](https://github.com/borkdude/clj-kondo) and uses the [analysis](https://github.com/borkdude/clj-kondo/tree/master/analysis) information to check which vars are unused. To remove the relevant bits of code it uses [rewrite-cljc](https://github.com/lread/rewrite-cljc-playground).
+
 ## Usage
 
 The usage for a typical Clojure app looks like:
@@ -35,7 +39,7 @@ expects an EDN map of the following options of which only `:paths` is required:
 
 - `:paths`: a list of paths to analyze. Can be a mix of individual files and directories.
 - `:ignore-vars`: a list of vars to ignore. Useful for when the analyzer has it wrong or you just want to keep the var for whatever reason.
-- `:ignore-namespaces`: a list of namespaces to ignore. This is ueseful for library APIs. Note: private vars are
+- `:ignore-namespaces`: a list of namespaces to ignore. Useful for library APIs. Note: private vars are
   still considered to be removed.
 - `:carve-ignore-file`: a file where ignored vars can be stored, `.carve_ignore`
   by default.
