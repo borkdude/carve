@@ -1,9 +1,9 @@
 (ns carve.impl
   {:no-doc true}
   (:require
-   [rewrite-cljc.zip :as z]
+   [clojure.java.io :as io]
    [rewrite-cljc.node :as node]
-   [clojure.java.io :as io]))
+   [rewrite-cljc.zip :as z]))
 
 (defn index-by
   [f coll]
@@ -30,8 +30,9 @@
         (if (and (= row (:row m))
                  (= col (:col m)))
           (do (println "Found unused var:")
+              (println "------------------")
               (println (node/string node))
-              (println)
+              (println "------------------")
               (let [remove? (cond dry-run? false
                                   interactive?
                                   (= "Y" (interactive opts (get locs->syms loc)))
