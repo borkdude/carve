@@ -54,8 +54,9 @@
       {:zloc zloc
        :made-changes? made-changes?})))
 
-(defn deftype? [defined-by]
-  (= 'clojure.core/deftype defined-by))
+(defn ignore-by-definer? [defined-by]
+  (or (= 'clojure.core/deftype defined-by)
+      (= 'clojure.core/defrecord defined-by)))
 
 (defn carve [file vs {:keys [:out-dir :api-namespaces]
                       :as opts}]
@@ -64,7 +65,7 @@
                          (keep (fn [{:keys [:row :col :ns :name :private :test
                                             :defined-by]}]
                                  (when (and (not test)
-                                            (not (deftype? defined-by))
+                                            (not (ignore-by-definer? defined-by))
                                             (or (not (contains? api-namespaces ns))
                                                 private))
                                    [[row col] (symbol (str ns) (str name))])) vs))
