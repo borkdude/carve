@@ -56,7 +56,8 @@
 
 (defn ignore-by-definer? [defined-by]
   (or (= 'clojure.core/deftype defined-by)
-      (= 'clojure.core/defrecord defined-by)))
+      (= 'clojure.core/defrecord defined-by)
+      (= 'clojure.core/definterface defined-by)))
 
 (defn carve [file vs {:keys [:out-dir :api-namespaces]
                       :as opts}]
