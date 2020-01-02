@@ -54,8 +54,9 @@
       {:zloc zloc
        :made-changes? made-changes?})))
 
-(defn ignore-by-definer? [defined-by]
-  (or (= 'clojure.core/deftype defined-by)
+(defn ignore? [{:keys [:export :defined-by]}]
+  (or export
+      (= 'clojure.core/deftype defined-by)
       (= 'clojure.core/defrecord defined-by)
       (= 'clojure.core/defprotocol defined-by)
       (= 'clojure.core/definterface defined-by)))
@@ -64,10 +65,9 @@
                       :as opts}]
   (let [zloc (z/of-file file)
         locs->syms (into {}
-                         (keep (fn [{:keys [:row :col :ns :name :private :test
-                                            :defined-by]}]
+                         (keep (fn [{:keys [:row :col :ns :name :private :test] :as var-info}]
                                  (when (and (not test)
-                                            (not (ignore-by-definer? defined-by))
+                                            (not (ignore? var-info))
                                             (or (not (contains? api-namespaces ns))
                                                 private))
                                    [[row col] (symbol (str ns) (str name))])) vs))
