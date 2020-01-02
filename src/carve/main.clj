@@ -30,6 +30,7 @@
         analysis (:analysis (clj-kondo/run! {:lint paths
                                              :config {:output {:analysis true}}}))
         {:keys [:var-definitions :var-usages]} analysis
+        var-usages (remove :recursive var-usages)
         definitions-by-ns+name (impl/index-by (juxt :ns :name) var-definitions)
         defined-vars (set (map (juxt :ns :name) var-definitions))
         used-vars (set (map (juxt :to :name) var-usages))

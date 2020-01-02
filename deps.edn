@@ -1,4 +1,4 @@
 {:deps {clj-kondo {:git/url "https://github.com/borkdude/clj-kondo"
-                   :sha "7e98384dd2399fcd3f4bab715226b696f8cb225f"}
+                   :sha "f5e6c35ffaae2f5c7945887d5a124872b32db4c3"}
         rewrite-cljc {:git/url "https://github.com/borkdude/rewrite-cljc-playground"
                       :sha "a60f2d3b172c6a8f1c25875f2af6c964b3f5fcc0"}}}
