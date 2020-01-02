@@ -47,6 +47,7 @@ expects an EDN map of the following options of which only `:paths` is required:
   to `.carve_ignore` or continue. Set to `true` by default.
 - `:out-dir`: instead of writing back to the original file, write to this dir.
 - `:dry-run?`: just print the unused var expression.
+- `:aggressive?`: runs `carve` multiple times until no unused vars are left.
 
 ``` shell
 $ clojure -A:carve --opts '{:paths ["test-resources"] :dry-run? true}'
