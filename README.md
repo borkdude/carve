@@ -101,16 +101,7 @@ app/-main
 
 ### Emacs
 
-In Emacs you might want to invoke carve using the `:report` option in `eshell`:
-
-``` shell
-$ clojure -A:carve --opts '{:paths ["test-resources"] :report {:format :text}}}'
-test-resources/uberscript/uberscript.clj:336:1 medley.core/drop-upto
-test-resources/uberscript/uberscript.clj:202:1 medley.core/greatest
-...
-```
-
-When you enable `compilation-minor-mode` the links become clickable.
+In Emacs you might want to invoke carve using the `:report` option in `eshell`. When you enable `compilation-minor-mode` the links become clickable.
 
 <img src="assets/eshell.png">
 
