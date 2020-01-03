@@ -12,6 +12,7 @@ jobs:
     environment:
       LEIN_ROOT: "true"
     steps:
+      - checkout
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "deps.edn" }}
