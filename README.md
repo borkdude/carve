@@ -16,7 +16,7 @@ Add to your `deps.edn` under the `:aliases` key:
 
 ``` clojure
 :carve {:extra-deps {borkdude/carve {:git/url "https://github.com/borkdude/carve"
-                                     :sha "81b3538ce0e166b2706b2f976e933a690869180d"}}
+                                     :sha "c4f5fe96a25fe2f2e287bd3119f9e6637de77b66"}}
         :main-opts ["-m" "carve.main"]}
 ```
 
@@ -47,7 +47,7 @@ expects an EDN map of the following options of which only `:paths` is required:
   to `.carve_ignore` or continue. Set to `true` by default.
 - `:out-dir`: instead of writing back to the original file, write to this dir.
 - `:dry-run?`: just print the unused var expression.
-- `:aggressive?`: runs `carve` multiple times until no unused vars are left.
+- `:aggressive?`: runs `carve` multiple times until no unused vars are left. Defaults to `false`.
 - `:report`: when truthy, prints unused vars to stdout. Implies `:dry-dun?
   true`. The output format may be set using `:report {:format ...}` where format
   can be `:edn` or `:text`. The text output can be interpreted by editors like
