@@ -49,7 +49,7 @@ expects an EDN map of the following options of which only `:paths` is required:
   to `.carve_ignore` or continue. Set to `true` by default.
 - `:out-dir`: instead of writing back to the original file, write to this dir.
 - `:dry-run?`: just print the unused var expression.
-- `:aggressive?`: runs `carve` multiple times until no unused vars are left. Defaults to `false`.
+- `:aggressive?`: runs multiple times until no unused vars are left. Defaults to `false`.
 - `:report`: when truthy, prints unused vars to stdout. Implies `:dry-dun?
   true`. The output format may be set using `:report {:format ...}` where format
   can be `:edn` or `:text`. The text output can be interpreted by editors like
@@ -98,6 +98,21 @@ $ cat .carve_ignore
 app/another-unused-function
 app/-main
 ```
+
+### Emacs
+
+In Emacs you might want to invoke carve using the `:report` option in `eshell`:
+
+``` shell
+$ clojure -A:carve --opts '{:paths ["test-resources"] :report {:format :text}}}'
+test-resources/uberscript/uberscript.clj:336:1 medley.core/drop-upto
+test-resources/uberscript/uberscript.clj:202:1 medley.core/greatest
+...
+```
+
+When you enable `compilation-minor-mode` the links become clickable.
+
+<img src="assets/eshell.png">
 
 ## License
 
