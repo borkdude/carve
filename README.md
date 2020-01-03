@@ -48,6 +48,10 @@ expects an EDN map of the following options of which only `:paths` is required:
 - `:out-dir`: instead of writing back to the original file, write to this dir.
 - `:dry-run?`: just print the unused var expression.
 - `:aggressive?`: runs `carve` multiple times until no unused vars are left. Defaults to `false`.
+- `:report`: when truthy, prints unused vars to stdout. Implies `:dry-dun?
+  true`. The output format may be set using `:report {:format ...}` where format
+  can be `:edn` or `:text`. The text output can be interpreted by editors like
+  Emacs. This option can be combined with `:aggressive?`.
 
 ``` shell
 $ clojure -A:carve --opts '{:paths ["test-resources"] :dry-run? true}'
