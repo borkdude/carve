@@ -64,11 +64,10 @@
         ;; (prn sym)
         (if (and (= row (:row m))
                  (= col (:col m)))
-          (do (when interactive?
-                (println "Found unused var:")
-                (println "------------------")
-                (println (node/string node))
-                (println "------------------"))
+          (do (println "Found unused var:")
+              (println "------------------")
+              (println (node/string node))
+              (println "------------------")
               (let [remove? (cond dry-run? false
                                   interactive?
                                   (= "Y" (interactive opts sym))

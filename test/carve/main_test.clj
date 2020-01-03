@@ -10,10 +10,11 @@
         uberscript-carved-expected (.getPath (io/file "test-resources" "uberscript" "uberscript_carved.clj"))
         tmp-dir (System/getProperty "java.io.tmpdir")
         uberscript-carved (io/file tmp-dir "test-resources" "uberscript" "uberscript.clj")]
-    (main/-main "--opts" (str {:paths [uberscript]
-                               :aggressive? true
-                               :interactive? false
-                               :out-dir tmp-dir}))
+    (with-out-str
+      (main/-main "--opts" (str {:paths [uberscript]
+                                 :aggressive? true
+                                 :interactive? false
+                                 :out-dir tmp-dir})))
     (is (= (slurp uberscript-carved-expected)
            (slurp uberscript-carved)))))
 
