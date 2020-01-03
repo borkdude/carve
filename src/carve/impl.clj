@@ -117,8 +117,9 @@
    (= 'clojure.core/definterface defined-by)))
 
 (defn reportize [results]
-  (mapv #(select-keys % [:filename :row :col :ns :name])
-        results))
+  (sort-by (juxt :filename :row :col)
+           (map #(select-keys % [:filename :row :col :ns :name])
+                results)))
 
 (defn print-report [report format]
   (case format

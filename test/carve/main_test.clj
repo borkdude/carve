@@ -20,9 +20,9 @@
 
 (deftest text-report-test
   (is (= (str/trim "
+test-resources/app/api.clj:3:1 api/private-lib-function
 test-resources/app/app.clj:4:1 app/unused-function
-test-resources/app/app.clj:5:1 app/another-unused-function
-test-resources/app/api.clj:3:1 api/private-lib-function")
+test-resources/app/app.clj:5:1 app/another-unused-function")
          (str/trim (with-out-str
                      (main/-main "--opts"
                                  (str {:paths [(.getPath (io/file "test-resources" "app"))]

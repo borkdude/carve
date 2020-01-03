@@ -5,9 +5,9 @@
 
 (deftest impl-test []
   (testing "without aggressive"
-    (is (= '[{:filename "test-resources/app/app.clj", :row 4, :col 1, :ns app, :name unused-function}
-             {:filename "test-resources/app/app.clj", :row 5, :col 1, :ns app, :name another-unused-function}
-             {:filename "test-resources/app/api.clj", :row 3, :col 1, :ns api, :name private-lib-function}]
+    (is (= '({:filename "test-resources/app/api.clj", :row 3, :col 1, :ns api, :name private-lib-function}
+             {:filename "test-resources/app/app.clj", :row 4, :col 1, :ns app, :name unused-function}
+             {:filename "test-resources/app/app.clj", :row 5, :col 1, :ns app, :name another-unused-function})
            (impl/run! {:paths [(.getPath (io/file "test-resources" "app"))]
                        :ignore-vars ['app/-main] :api-namespaces ['api] :report true}))))
   (testing "with aggressive"
