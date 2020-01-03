@@ -64,10 +64,11 @@
         ;; (prn sym)
         (if (and (= row (:row m))
                  (= col (:col m)))
-          (do (println "Found unused var:")
-              (println "------------------")
-              (println (node/string node))
-              (println "------------------")
+          (do (when interactive?
+                (println "Found unused var:")
+                (println "------------------")
+                (println (node/string node))
+                (println "------------------"))
               (let [remove? (cond dry-run? false
                                   interactive?
                                   (= "Y" (interactive opts sym))
@@ -84,8 +85,7 @@
 
 (defn carve!
   "Removes unused vars from file."
-  [file vs {:keys [:out-dir]
-            :as opts}]
+  [file vs {:keys [:out-dir] :as opts}]
   (let [zloc (z/of-file file)
         locs->syms (into {}
                          (map (fn [{:keys [:row :col :ns :name]}]
@@ -97,13 +97,13 @@
             (println))
         {:keys [:made-changes? :zloc]}
         (remove-locs zloc locs locs->syms opts)]
-    (prn "made changes" made-changes?)
     (when made-changes?
-      (let [out-file (io/file out-dir file)
-            out-file (.getCanonicalFile out-file)]
-        (io/make-parents out-file)
-        (println "Writing result to" (.getPath out-file))
-        (with-open [w (io/writer out-file)]
+      (let [file (io/file file)
+            file (if (.isAbsolute file) file
+                     (io/file out-dir file))]
+        (io/make-parents file)
+        (println "Writing result to" (.getCanonicalPath file))
+        (with-open [w (io/writer file)]
           (z/print-root zloc w))))))
 
 (defn ignore? [api-namespaces {:keys [:ns :export :defined-by :test :private]}]
@@ -140,7 +140,7 @@
      :var-usages var-usages}))
 
 (defn make-absolute-paths [dir paths]
-  (mapv #(io/file dir %) paths))
+  (mapv #(.getPath (io/file dir %)) paths))
 
 (defn run! [opts]
   (let [{:keys [:carve-ignore-file
@@ -154,7 +154,6 @@
                       [(symbol (namespace ep)) (symbol (name ep))])
                     ignore-vars)
         re-analyze? (not dry-run?)]
-    (prn "re-analyze?" re-analyze?)
     (loop [removed #{}
            results []
            analysis (analyze paths)]
@@ -190,3 +189,4 @@
                          analysis))
                 (reportize results)))
           (reportize results))))))
+

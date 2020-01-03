@@ -5,12 +5,11 @@
    [clojure.string :as str]
    [clojure.java.io :as io]))
 
-#_(deftest carve-test
+(deftest carve-test
   (let [uberscript (.getPath (io/file "test-resources" "uberscript" "uberscript.clj"))
         uberscript-carved-expected (.getPath (io/file "test-resources" "uberscript" "uberscript_carved.clj"))
         tmp-dir (System/getProperty "java.io.tmpdir")
         uberscript-carved (io/file tmp-dir "test-resources" "uberscript" "uberscript.clj")]
-    (prn uberscript-carved)
     (main/-main "--opts" (str {:paths [uberscript]
                                :aggressive? true
                                :interactive? false
