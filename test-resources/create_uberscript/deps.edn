@@ -1,0 +1,2 @@
+{:deps {medley {:mvn/version "1.2.0"}}
+ :aliases {:carve-local {:deps {carve {:local/root "../.."}}}}}
