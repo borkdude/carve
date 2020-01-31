@@ -167,8 +167,6 @@
             definitions-by-ns+name (index-by (juxt :ns :name) var-definitions)
             defined-vars (set (map (juxt :ns :name) var-definitions))
             defined-vars (set/difference defined-vars removed)
-            ;; usages of vars that are already removed can be disregarded
-            var-usages (remove #(removed? removed %) var-usages)
             used-vars (set (map (juxt :to :name) var-usages))
             ;; we're adding removed to used-vars so they won't be reported again
             used-vars (reduce into used-vars [ignore-from-config ignore removed])
