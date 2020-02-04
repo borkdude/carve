@@ -1,7 +1,7 @@
 (ns carve.main-test
   (:require
    [carve.main :as main]
-   [clojure.test :as t :refer [deftest is]]
+   [clojure.test :as t :refer [deftest is testing]]
    [clojure.string :as str]
    [clojure.java.io :as io]))
 
@@ -40,3 +40,14 @@ test-resources/app/app.clj:5:1 app/another-unused-function")
                                        :ignore-vars ['app/-main]
                                        :api-namespaces ['api]
                                        :report {:format :text}})))))))
+
+(deftest options-validation-test
+  (testing "Forgetting to quote paths give an error"
+    (is (thrown? clojure.lang.ExceptionInfo
+                 (main/-main "--opts" "{:paths [src test]}"))))
+
+  (testing "Passing a non existing directory fails to validate"
+    (is (thrown-with-msg?
+         clojure.lang.ExceptionInfo
+         #"Path not found"
+         (main/-main "--opts" (str {:paths ["not-existing"]}))))))
