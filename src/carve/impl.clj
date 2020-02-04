@@ -129,9 +129,6 @@
             (println (str filename ":" row ":" col " " ns "/" name)))
     (prn report)))
 
-(defn removed? [removed {:keys [:from :from-var]}]
-  (contains? removed [from from-var]))
-
 (defn analyze [paths]
   (let [{:keys [:var-definitions
                 :var-usages]} (:analysis (clj-kondo/run! {:lint paths
