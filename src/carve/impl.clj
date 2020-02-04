@@ -111,6 +111,7 @@
    export
    (when (contains? api-namespaces ns)
      (not private))
+   (= "-main" (some-> defined-by name))
    (= 'clojure.core/deftype defined-by)
    (= 'clojure.core/defrecord defined-by)
    (= 'clojure.core/defprotocol defined-by)
@@ -187,4 +188,3 @@
                          analysis))
                 (reportize results)))
           (reportize results))))))
-
