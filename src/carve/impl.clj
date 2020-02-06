@@ -105,12 +105,13 @@
         (with-open [w (io/writer file)]
           (z/print-root zloc w))))))
 
-(defn ignore? [api-namespaces {:keys [:ns :export :defined-by :test :private]}]
+(defn ignore? [api-namespaces {:keys [:ns :export :defined-by :test :private :name]}]
   (or
    test
    export
    (when (contains? api-namespaces ns)
      (not private))
+   (.startsWith (str name) "-")
    (= 'clojure.core/deftype defined-by)
    (= 'clojure.core/defrecord defined-by)
    (= 'clojure.core/defprotocol defined-by)
@@ -127,9 +128,6 @@
     :text (doseq [{:keys [:filename :row :col :ns :name]} report]
             (println (str filename ":" row ":" col " " ns "/" name)))
     (prn report)))
-
-(defn removed? [removed {:keys [:from :from-var]}]
-  (contains? removed [from from-var]))
 
 (defn analyze [paths]
   (let [{:keys [:var-definitions
@@ -187,4 +185,3 @@
                          analysis))
                 (reportize results)))
           (reportize results))))))
-
