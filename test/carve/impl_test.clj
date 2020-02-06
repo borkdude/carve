@@ -9,7 +9,7 @@
              {:filename "test-resources/app/app.clj", :row 4, :col 1, :ns app, :name unused-function}
              {:filename "test-resources/app/app.clj", :row 5, :col 1, :ns app, :name another-unused-function})
            (impl/run! {:paths [(.getPath (io/file "test-resources" "app"))]
-                       :ignore-vars ['app/-main] :api-namespaces ['api] :report true}))))
+                       :ignore-vars ['app/-main 'app/ignore-me] :api-namespaces ['api] :report true}))))
   (testing "with aggressive"
     (= '[{:filename "test-resources/app/app.clj", :row 4, :col 1, :ns app, :name unused-function}
          {:filename "test-resources/app/app.clj", :row 5, :col 1, :ns app, :name another-unused-function}
