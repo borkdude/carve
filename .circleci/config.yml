@@ -27,7 +27,9 @@ jobs:
       - run:
           name: Run JVM tests
           command: |
-            script/test
+            script/kaocha --plugin kaocha.plugin/junit-xml --junit-xml-file test-results/kaocha/results.xml
+      - store_test_results:
+          path: test-results
       - save_cache:
           paths:
             - ~/.m2
