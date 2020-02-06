@@ -105,13 +105,13 @@
         (with-open [w (io/writer file)]
           (z/print-root zloc w))))))
 
-(defn ignore? [api-namespaces {:keys [:ns :export :defined-by :test :private]}]
+(defn ignore? [api-namespaces {:keys [:ns :export :defined-by :test :private :name]}]
   (or
    test
    export
    (when (contains? api-namespaces ns)
      (not private))
-   (= "-main" (some-> defined-by name))
+   (.startsWith (str name) "-")
    (= 'clojure.core/deftype defined-by)
    (= 'clojure.core/defrecord defined-by)
    (= 'clojure.core/defprotocol defined-by)
