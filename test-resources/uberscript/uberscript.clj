@@ -502,6 +502,3 @@
      :bb  (java.util.UUID/randomUUID)
      :cljs (cljs.core/random-uuid)))
 (require '[medley.core :refer [index-by]]) (index-by :id [{:id 1} {:id 2}])
-
-(defn -main [& args]
-  (println "in main"))
