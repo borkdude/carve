@@ -30,6 +30,15 @@ jobs:
             script/kaocha --plugin kaocha.plugin/junit-xml --junit-xml-file test-results/kaocha/results.xml
       - store_test_results:
           path: test-results
+
+      - run: script/kaocha --plugin cloverage --codecov
+      - store_artifacts:
+          path: target/coverage
+
+      - run:
+          name: Upload test coverage report to Codecov
+          command: bash <(curl -s https://codecov.io/bash)
+
       - save_cache:
           paths:
             - ~/.m2
