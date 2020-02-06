@@ -30,13 +30,20 @@
     (is (= (slurp (io/file "test-resources" "issue_11" "issue_11_expected.clj"))
            (slurp (io/file tmp-dir "test-resources" "issue_11" "issue_11.clj"))))))
 
+(deftest ignore-main-test
+  (is (false?
+       (clojure.string/includes?
+        (run-main {:paths [(.getPath (io/file "test-resources" "app"))]
+                   :api-namespaces ['api]
+                   :report {:format :text}})
+        "-main"))))
+
 (deftest text-report-test
   (is (= (str/trim "
 test-resources/app/api.clj:3:1 api/private-lib-function
 test-resources/app/app.clj:4:1 app/unused-function
 test-resources/app/app.clj:5:1 app/another-unused-function")
          (str/trim (run-main {:paths [(.getPath (io/file "test-resources" "app"))]
-                              :ignore-vars ['app/-main]
                               :api-namespaces ['api]
                               :report {:format :text}})))))
 
