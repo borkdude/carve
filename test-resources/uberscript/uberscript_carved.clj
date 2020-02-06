@@ -14,3 +14,6 @@
   (persistent! (reduce #(assoc! %1 (f %2) %2) (transient {}) coll)))
 
 (require '[medley.core :refer [index-by]]) (index-by :id [{:id 1} {:id 2}])
+
+(defn -main [& args]
+  (println "in main"))
