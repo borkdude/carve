@@ -11,13 +11,32 @@
 (s/check-asserts true)
 
 (s/def ::paths (s/coll-of string?))
-(s/def ::opts (s/keys :req-un [::paths]))
+(s/def ::ignore-vars (s/coll-of symbol?))
+(s/def ::api-namespaces (s/coll-of symbol?))
+(s/def ::carve-ignore-file string?)
+(s/def ::interactive? boolean?)
+(s/def ::dry-run? boolean?)
+(s/def ::format #{:edn :text})
+(s/def ::aggressive? boolean?)
+(s/def ::out-dir string?)
+(s/def ::report-format (s/keys :req-un [::format]))
+(s/def ::report (s/or :bool boolean? :map ::report-format))
+
+(s/def ::opts (s/keys :req-un [::paths]
+                      :opt-un [::ignore-vars
+                               ::api-namespaces
+                               ::carve-ignore-file
+                               ::interactive?
+                               ::out-dir
+                               ::dry-run?
+                               ::aggressive?
+                               ::report]))
 
 (defn- valid-path?
   [p]
   (.exists (io/file p)))
 
-(defn- validate-opts!
+(defn validate-opts!
   "Validate options throwing an exception if they don't validate"
   [{:keys [paths] :as opts}]
   (s/assert ::opts opts)

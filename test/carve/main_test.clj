@@ -1,6 +1,8 @@
 (ns carve.main-test
   (:require
    [carve.main :as main]
+   [clojure.spec.alpha :as s]
+   [clojure.spec.gen.alpha :as g]
    [clojure.test :as t :refer [deftest is testing]]
    [clojure.string :as str]
    [clojure.java.io :as io]))
@@ -61,6 +63,11 @@ test-resources/app/app.clj:9:1 app/ignore-me")
   (testing "Forgetting to quote paths give an error"
     (is (thrown? clojure.lang.ExceptionInfo
                  (run-main "{:paths [src test]}"))))
+
+  (testing "Generate random options validate"
+    (doseq [o (g/sample (s/gen ::main/opts))]
+      ;; the paths needs to exist to to simplify the test we just hard code it
+      (is (nil? (main/validate-opts! (assoc o :paths ["."]))))))
 
   (testing "Passing a non existing directory fails to validate"
     (is (thrown-with-msg?
