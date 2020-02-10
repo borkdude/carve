@@ -87,17 +87,10 @@ Found unused var:
 
 Type Y to remove or i to add app/another-unused-function to .carve_ignore
 i
-Found unused var:
-(defn -main []
-  (used-function))
-
-Type Y to remove or i to add app/another-unused-function to .carve_ignore
-i
 ...
 
 $ cat .carve_ignore
 app/another-unused-function
-app/-main
 ```
 
 Keep in mind that if you ran `carve` with `'{:paths ["src" "test"]}'`, there might still be potentially lots of unused code, which wasn't detected simply because there are tests for it.
