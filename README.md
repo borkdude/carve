@@ -100,6 +100,11 @@ app/another-unused-function
 app/-main
 ```
 
+Keep in mind that if you ran `carve` with `'{:paths ["src" "test"]}'`, there might still be potentially lots of unused code, which wasn't detected simply because there are tests for it.
+
+So after a first cycle of carving you might want to do another run with simply `{:paths ["src"]}`, which will help deleting the rest of the unused code.
+*Just beware that this will break all the tests using the code you just deleted, and you'll have to fix/delete them manually.**
+
 ### Emacs
 
 In Emacs you might want to invoke carve using the `:report` option in `eshell`. When you enable `compilation-minor-mode` the links become clickable.
