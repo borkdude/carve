@@ -43,6 +43,12 @@
               :row      9,
               :col      1,
               :ns       app,
-              :name     ignore-me}]
+              :name     ignore-me}
+             {:filename "test-resources/app/app.clj",
+              :row 3,
+              :col 1,
+              :ns app,
+              :name only-used-by-unused-function}]
+
            (impl/run! {:paths       [(.getPath (io/file "test-resources" "app"))]
                        :ignore-vars ['app/-main] :api-namespaces ['api] :report true :aggressive? true})))))
