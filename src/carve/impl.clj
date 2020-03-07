@@ -165,12 +165,22 @@
             definitions-by-ns+name (index-by (juxt :ns :name) var-definitions)
             defined-vars (set (map (juxt :ns :name) var-definitions))
             defined-vars (set/difference defined-vars removed)
+            ;; var usages contains the full set of usages as detected by
+            ;; clj-kondo since we already removed some of the functions, not all
+            ;; usage may be relevant anymore
+            var-usages (remove (fn [usage]
+                                (let [from-var (:from-var usage)
+                                      from-ns (:from usage)]
+                                  (and from-var from-ns
+                                       (contains? removed [from-ns from-var]))))
+                               var-usages)
             used-vars (set (map (juxt :to :name) var-usages))
-            ;; we're adding removed to used-vars so they won't be reported again
-            used-vars (reduce into used-vars [ignore-from-config ignore removed])
+            used-vars (reduce into used-vars [ignore-from-config ignore])
             unused-vars (set/difference (set defined-vars) used-vars)
             unused-vars-data (map definitions-by-ns+name unused-vars)
             unused-vars-data (remove #(ignore? api-namespaces %) unused-vars-data)
+            ;; update unused-vars with ignored ones (deftest, etc)
+            unused-vars (set (map (juxt :ns :name) unused-vars-data))
             results (into results unused-vars-data)]
         (if (seq unused-vars-data)
           (do (when-not (:report opts)

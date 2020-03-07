@@ -1,5 +1,5 @@
 {:deps {clj-kondo {:git/url "https://github.com/borkdude/clj-kondo"
-                   :sha "f5e6c35ffaae2f5c7945887d5a124872b32db4c3"}
+                   :sha "f3fb45ab2a734a5862db5d20b83234f440f3e755"}
         rewrite-cljc {:git/url "https://github.com/borkdude/rewrite-cljc-playground"
                       :sha "a60f2d3b172c6a8f1c25875f2af6c964b3f5fcc0"}
         expound {:mvn/version "0.8.4"}}
