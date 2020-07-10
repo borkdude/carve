@@ -98,6 +98,36 @@ Keep in mind that if you ran `carve` with `'{:paths ["src" "test"]}'`, there mig
 So after a first cycle of carving you might want to do another run with simply `{:paths ["src"]}`, which will help deleting the rest of the unused code.
 *Just beware that this will break all the tests using the code you just deleted, and you'll have to fix/delete them manually.**
 
+### CI integration
+
+A good use case for Carve is the CI integration, to ensure that noone can introduce dead code into a codebase.
+This example shows how to add this step into CircleCI, but any other CI configuration will be similar.
+
+First add this configuration into a `.circleci/deps.edn` file:
+
+```clojure
+{:aliases
+ {:carve {:extra-deps {borkdude/carve {:git/url "https://github.com/borkdude/carve"
+                                       :sha "$LATEST_CARVE_SHA"}}
+          :main-opts ["-m" "carve.main"]}}}
+```
+
+Then configure your build step like this:
+
+```yaml
+find_dead_code:
+  working_directory: ~/$your-project
+  docker:
+    - image: circleci/clojure:openjdk-11-tools-deps
+
+  steps:
+    - checkout
+    - run: mkdir -p ~/.clojure && cp .circleci/deps.edn ~/.clojure/deps.edn
+    - run: clojure -Acarve --opts '{:paths ["src" "test"] :report {:format :text}}'
+```
+
+If the `report` step finds any dead code it exits with status code `1`, thus failing the build step.
+
 ### Emacs
 
 In Emacs you might want to invoke carve using the `:report` option in `eshell`. When you enable `compilation-minor-mode` the links become clickable.

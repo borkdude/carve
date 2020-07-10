@@ -9,7 +9,7 @@
 
 (defn- run-main [opts]
   (with-out-str
-    (main/-main "--opts" (str opts))))
+    (main/main "--opts" (str opts))))
 
 (deftest carve-test
   (let [uberscript (.getPath (io/file "test-resources" "uberscript" "uberscript.clj"))
@@ -58,6 +58,18 @@ test-resources/app/app.clj:9:1 app/ignore-me")
          (str/trim (run-main {:paths [(.getPath (io/file "test-resources" "app"))]
                               :api-namespaces ['api]
                               :report {:format :text}})))))
+
+(deftest report-exit-code-test
+  (testing "Nothing to report exits with exit code 0"
+    (is (= 0 (main/main "--opts" (str {:paths [(.getPath (io/file "test-resources" "unchanged.clj"))]
+                                       :api-namespaces ['api]
+                                       :report {:format :text}})))))
+
+  (testing "Something to report exits with exit code 1"
+    (is (= 1
+           (main/main "--opts" (str {:paths [(.getPath (io/file "test-resources" "app"))]
+                                     :api-namespaces ['api]
+                                     :report {:format :text}}))))))
 
 (deftest options-validation-test
   (testing "Forgetting to quote paths give an error"
