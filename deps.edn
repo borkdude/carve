@@ -8,6 +8,7 @@
                                  lambdaisland/kaocha {:mvn/version "0.0-590"}
                                  lambdaisland/kaocha-junit-xml {:mvn/version "0.0-70"}
                                  lambdaisland/kaocha-cloverage {:mvn/version "0.0-41"}}}
+           :dev {:extra-deps {org.clojure/test.check {:mvn/version "0.10.0"}}}
            :test {:extra-paths ["test"]
                   :extra-deps {org.clojure/test.check {:mvn/version "0.10.0"}
                                com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
