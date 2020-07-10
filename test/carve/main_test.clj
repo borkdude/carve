@@ -40,6 +40,14 @@
                    :report {:format :text}})
         "-main"))))
 
+(deftest ignore-tag-test
+  (is (false?
+       (clojure.string/includes?
+        (run-main {:paths [(.getPath (io/file "test-resources" "tagged.clj"))]
+                   :ignore-keywords [:ignore-me]
+                   :report {:format :text}})
+        "to-ignore"))))
+
 (deftest ignore-var-test
   (is (false?
        (clojure.string/includes?
