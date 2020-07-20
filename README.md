@@ -100,7 +100,7 @@ So after a first cycle of carving you might want to do another run with simply `
 
 ### CI integration
 
-A good use case for Carve is the CI integration, to ensure that no-one can introduce dead code into a codebase.
+A good use case for Carve is the CI integration, to ensure that no one can introduce dead code into a codebase.
 This example shows how to add this step into CircleCI, but any other CI configuration will be similar.
 
 First add this configuration into a `.circleci/deps.edn` file:
