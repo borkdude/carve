@@ -43,12 +43,18 @@
   (when-not (every? valid-path? paths)
     (throw (ex-info "Path not found" {:paths paths}))))
 
-(defn -main [& [flag opts & _args]]
+(defn main
+  [& [flag opts & _args]]
   (when-not (= "--opts" flag)
     (throw (ex-info (str "Unrecognized option: " flag) {:flag flag})))
   (let [opts (edn/read-string opts)
         _ (validate-opts! opts)
+        format (-> opts :report :format)
         report (impl/run! opts)]
-    (when-let [r (:report opts)]
-      (let [format (:format r)]
-        (impl/print-report report format)))))
+    (when format
+      (impl/print-report report format))
+    (if (empty? report) 0 1)))
+
+(defn -main
+  [& options]
+  (System/exit (apply main options)))
