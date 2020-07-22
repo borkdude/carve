@@ -130,7 +130,15 @@ If the `report` step finds any dead code it exits with status code `1`, thus fai
 
 ### Emacs
 
-In Emacs you might want to invoke carve using the `:report` option in `eshell`. When you enable `compilation-minor-mode` the links become clickable.
+Running carve with in report mode (for example `clojure -Acarve --opts '{:paths ["src" "test"] :report {:format :text}}'`)
+you can make all the links clickable by switching to compilation-mode.
+
+If you want to run tests in Emacs and Cider you need to use the test alias, or it will fail while trying to load the `test.check` library.
+Just place this in your `.dir-locals.el` file in the root directory to always use the test alias:
+
+```elisp
+((clojure-mode . ((cider-clojure-cli-global-options . "-R:test"))))
+```
 
 <img src="assets/eshell.png">
 
