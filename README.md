@@ -123,7 +123,7 @@ find_dead_code:
   steps:
     - checkout
     - run: mkdir -p ~/.clojure && cp .circleci/deps.edn ~/.clojure/deps.edn
-    - run: clojure -Acarve --opts '{:paths ["src" "test"] :report {:format :text}}'
+    - run: clojure -A:carve --opts '{:paths ["src" "test"] :report {:format :text}}'
 ```
 
 If the `report` step finds any dead code it exits with status code `1`, thus failing the build step.
