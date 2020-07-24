@@ -130,17 +130,27 @@ If the `report` step finds any dead code it exits with status code `1`, thus fai
 
 ### Emacs
 
-Running carve with in report mode (for example `clojure -Acarve --opts '{:paths ["src" "test"] :report {:format :text}}'`)
-you can make all the links clickable by switching to compilation-mode.
+#### Report mode
 
-If you want to run tests in Emacs and Cider you need to use the test alias, or it will fail while trying to load the `test.check` library.
-Just place this in your `.dir-locals.el` file in the root directory to always use the test alias:
+Running carve with in report mode (for example `clojure -Acarve --opts '{:paths
+["src" "test"] :report {:format :text}}'`) you can make all the links clickable
+by switching to compilation-mode.
+
+
+<img src="assets/eshell.png">
+
+#### Running tests
+
+If you want to run tests in Emacs and Cider you need to use the test alias, or
+it will fail while trying to load the `test.check` library.  You can place this in
+your `.dir-locals.el` file in the root directory to always use the test alias:
 
 ```elisp
 ((clojure-mode . ((cider-clojure-cli-global-options . "-R:test"))))
 ```
 
-<img src="assets/eshell.png">
+or alter the command used by `cider-jack-in` by prefixing the invocation with
+`C-u`.
 
 ## License
 
