@@ -24,6 +24,7 @@
 (s/def ::out-dir string?)
 (s/def ::report-format (s/keys :req-un [::format]))
 (s/def ::report (s/or :bool boolean? :map ::report-format))
+(s/def ::silent boolean?)
 
 (s/def ::opts (s/keys :req-un [::paths]
                       :opt-un [::ignore-vars
@@ -36,7 +37,8 @@
                                ::dry-run?
                                ::aggressive
                                ::aggressive?
-                               ::report]))
+                               ::report
+                               ::silent]))
 
 (defn- valid-path?
   [p]

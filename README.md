@@ -55,6 +55,7 @@ expects an EDN map of the following options of which only `:paths` is required:
   true`. The output format may be set using `:report {:format ...}` where format
   can be `:edn` or `:text`. The text output can be interpreted by editors like
   Emacs. This option can be combined with `:aggressive`.
+- `:silent`: when truthy, does not write to stdout. Implies `:interactive false`.
 
 ``` shell
 $ clojure -A:carve --opts '{:paths ["test-resources"] :dry-run true}'

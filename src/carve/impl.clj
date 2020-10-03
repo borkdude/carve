@@ -35,7 +35,10 @@
                opts)
         opts (if (:out-dir opts)
                opts
-               (assoc opts :out-dir (System/getProperty "user.dir")))]
+               (assoc opts :out-dir (System/getProperty "user.dir")))
+        opts (if (:silent opts)
+               (assoc opts :interactive false)
+               opts)]
     opts))
 
 (defn read-carve-ignore-file [carve-ignore-file]
@@ -56,7 +59,8 @@
     input))
 
 (defn remove-locs [zloc locs locs->syms {:keys [:interactive
-                                                :dry-run]
+                                                :dry-run
+                                                :silent]
                                          :or {interactive true}
                                          :as opts}]
   (loop [zloc zloc
@@ -70,10 +74,11 @@
         ;; (prn sym)
         (if (and (= row (:row m))
                  (= col (:col m)))
-          (do (println "Found unused var:")
-              (println "------------------")
-              (println (node/string node))
-              (println "------------------")
+          (do (when-not silent
+                (println "Found unused var:")
+                (println "------------------")
+                (println (node/string node))
+                (println "------------------"))
               (let [remove? (cond dry-run false
                                   interactive
                                   (= "Y" (interact opts sym))
@@ -90,14 +95,14 @@
 
 (defn carve!
   "Removes unused vars from file."
-  [file vs {:keys [:out-dir] :as opts}]
+  [file vs {:keys [:out-dir :silent] :as opts}]
   (let [zloc (z/of-file file)
         locs->syms (into {}
                          (map (fn [{:keys [:row :col :ns :name]}]
                                 [[row col] (symbol (str ns) (str name))]) vs))
         locs (keys locs->syms)
         locs (sort locs)
-        _ (when (seq locs)
+        _ (when (and (not silent) (seq locs))
             (println "Carving" file)
             (println))
         {:keys [:made-changes? :zloc]}
@@ -107,7 +112,7 @@
             file (if (.isAbsolute file) file
                      (io/file out-dir file))]
         (io/make-parents file)
-        (println "Writing result to" (.getCanonicalPath file))
+        (when-not silent (println "Writing result to" (.getCanonicalPath file)))
         (with-open [w (io/writer file)]
           (z/print-root zloc w))))))
 
