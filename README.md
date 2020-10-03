@@ -62,7 +62,7 @@ expects an EDN map of the following options of which only `:paths` is required:
 - `:silent`: when truthy, does not write to stdout. Implies `:interactive false`.
 
 ``` shell
-$ clojure -A:carve --opts '{:paths ["test-resources"] :dry-run true}'
+$ clojure -M:carve --opts '{:paths ["test-resources"] :dry-run true}'
 Carving test-resources/app.clj
 
 Found unused var:
@@ -79,7 +79,7 @@ Found unused var:
 ```
 
 ``` shell
-$ clojure -A:carve --opts '{:paths ["test-resources"]}'
+$ clojure -M:carve --opts '{:paths ["test-resources"]}'
 Carving test-resources/app.clj
 
 Found unused var:
@@ -128,7 +128,7 @@ find_dead_code:
   steps:
     - checkout
     - run: mkdir -p ~/.clojure && cp .circleci/deps.edn ~/.clojure/deps.edn
-    - run: clojure -A:carve --opts '{:paths ["src" "test"] :report {:format :text}}'
+    - run: clojure -M:carve --opts '{:paths ["src" "test"] :report {:format :text}}'
 ```
 
 If the `report` step finds any dead code it exits with status code `1`, thus failing the build step.
@@ -137,7 +137,7 @@ If the `report` step finds any dead code it exits with status code `1`, thus fai
 
 #### Report mode
 
-Running carve with in report mode (for example `clojure -Acarve --opts '{:paths
+Running carve with in report mode (for example `clojure -M:carve --opts '{:paths
 ["src" "test"] :report {:format :text}}'`) you can make all the links clickable
 by switching to compilation-mode.
 
