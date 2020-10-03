@@ -1,9 +1,9 @@
 (ns carve.main
   (:require
-   [clojure.java.io :as io]
-   [clojure.spec.alpha :as s]
    [carve.impl :as impl]
    [clojure.edn :as edn]
+   [clojure.java.io :as io]
+   [clojure.spec.alpha :as s]
    [expound.alpha :as expound]))
 
 (set! *warn-on-reflection* true)
@@ -14,10 +14,13 @@
 (s/def ::ignore-vars (s/coll-of symbol?))
 (s/def ::api-namespaces (s/coll-of symbol?))
 (s/def ::carve-ignore-file string?)
-(s/def ::interactive? boolean?)
-(s/def ::dry-run? boolean?)
+(s/def ::interactive boolean?)
+(s/def ::interactive? boolean?) ;; deprecated
+(s/def ::dry-run boolean?)
+(s/def ::dry-run? boolean?) ;; deprecated
 (s/def ::format #{:edn :text})
-(s/def ::aggressive? boolean?)
+(s/def ::aggressive boolean?)
+(s/def ::aggressive? boolean?) ;; deprecated
 (s/def ::out-dir string?)
 (s/def ::report-format (s/keys :req-un [::format]))
 (s/def ::report (s/or :bool boolean? :map ::report-format))
@@ -26,9 +29,12 @@
                       :opt-un [::ignore-vars
                                ::api-namespaces
                                ::carve-ignore-file
+                               ::interactive
                                ::interactive?
                                ::out-dir
+                               ::dry-run
                                ::dry-run?
+                               ::aggressive
                                ::aggressive?
                                ::report]))
 

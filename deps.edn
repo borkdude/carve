@@ -1,8 +1,8 @@
-{:deps {clj-kondo {:git/url "https://github.com/borkdude/clj-kondo"
-                   :sha "f3fb45ab2a734a5862db5d20b83234f440f3e755"}
-        rewrite-cljc {:git/url "https://github.com/borkdude/rewrite-cljc-playground"
-                      :sha "a60f2d3b172c6a8f1c25875f2af6c964b3f5fcc0"}
-        expound {:mvn/version "0.8.4"}}
+{:deps {clj-kondo/clj-kondo {:git/url "https://github.com/borkdude/clj-kondo"
+                   :sha "f4941cb3f2a1e643413dde11a7b09f24087b7afc"}
+        borkdude/rewrite-cljc {:git/url "https://github.com/borkdude/rewrite-cljc-playground"
+                               :sha "a60f2d3b172c6a8f1c25875f2af6c964b3f5fcc0"}
+        expound/expound {:mvn/version "0.8.6"}}
  :aliases {:kaocha {:extra-paths ["test"]
                     :extra-deps {org.clojure/test.check {:mvn/version "0.10.0"}
                                  lambdaisland/kaocha {:mvn/version "0.0-590"}

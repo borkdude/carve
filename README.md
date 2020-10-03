@@ -34,7 +34,7 @@ Carve invokes [clj-kondo](https://github.com/borkdude/clj-kondo) and uses the [a
 The usage for a typical Clojure app looks like:
 
 ```
-clojure -A:carve --opts '{:paths ["src" "test"]}'
+clojure -M:carve --opts '{:paths ["src" "test"]}'
 ```
 
 Currently `carve` only has one command line option, `--opts`, which
@@ -46,18 +46,18 @@ expects an EDN map of the following options of which only `:paths` is required:
   be reported.
 - `:carve-ignore-file`: a file where ignored vars can be stored, `.carve_ignore`
   by default.
-- `:interactive?`: ask what to do with an unused var: remove from the file, add
+- `:interactive`: ask what to do with an unused var: remove from the file, add
   to `.carve_ignore` or continue. Set to `true` by default.
 - `:out-dir`: instead of writing back to the original file, write to this dir.
-- `:dry-run?`: just print the unused var expression.
-- `:aggressive?`: runs multiple times until no unused vars are left. Defaults to `false`.
-- `:report`: when truthy, prints unused vars to stdout. Implies `:dry-run?
+- `:dry-run`: just print the unused var expression.
+- `:aggressive`: runs multiple times until no unused vars are left. Defaults to `false`.
+- `:report`: when truthy, prints unused vars to stdout. Implies `:dry-run
   true`. The output format may be set using `:report {:format ...}` where format
   can be `:edn` or `:text`. The text output can be interpreted by editors like
-  Emacs. This option can be combined with `:aggressive?`.
+  Emacs. This option can be combined with `:aggressive`.
 
 ``` shell
-$ clojure -A:carve --opts '{:paths ["test-resources"] :dry-run? true}'
+$ clojure -A:carve --opts '{:paths ["test-resources"] :dry-run true}'
 Carving test-resources/app.clj
 
 Found unused var:
@@ -154,6 +154,6 @@ or alter the command used by `cider-jack-in` by prefixing the invocation with
 
 ## License
 
-Copyright © 2019 Michiel Borkent
+Copyright © 2019-2020 Michiel Borkent
 
 Distributed under the EPL License. See LICENSE.

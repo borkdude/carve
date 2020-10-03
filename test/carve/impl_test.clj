@@ -1,7 +1,7 @@
 (ns carve.impl-test
   (:require [carve.impl :as impl]
-            [clojure.test :as t :refer [deftest is testing]]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [clojure.test :as t :refer [deftest is testing]]))
 
 (deftest impl-test []
   (testing "without aggressive"
@@ -51,4 +51,4 @@
                :name only-used-by-unused-function}}
 
            (set (impl/run! {:paths       [(.getPath (io/file "test-resources" "app"))]
-                            :ignore-vars ['app/-main] :api-namespaces ['api] :report true :aggressive? true}))))))
+                            :ignore-vars ['app/-main] :api-namespaces ['api] :report true :aggressive true}))))))

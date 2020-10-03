@@ -1,11 +1,15 @@
 (ns carve.main-test
   (:require
    [carve.main :as main]
+   [clojure.java.io :as io]
    [clojure.spec.alpha :as s]
    [clojure.spec.gen.alpha :as g]
-   [clojure.test :as t :refer [deftest is testing]]
    [clojure.string :as str]
-   [clojure.java.io :as io]))
+   [clojure.test :as t :refer [deftest is testing]]))
+
+(defmethod clojure.test/report :begin-test-var [m]
+  (println "===" (-> m :var meta :name))
+  (println))
 
 (defn- run-main [opts]
   (with-out-str

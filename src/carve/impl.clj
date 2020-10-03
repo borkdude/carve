@@ -15,17 +15,23 @@
 
 (defn sanitize-opts [opts]
   (when (empty? (:paths opts)) (throw (ex-info ":paths must not be empty" opts)))
-  (let [opts (update opts :api-namespaces set)
+  (let [{:keys [:dry-run? :dry-run :aggressive? :aggressive :interactive? :interactive]} opts
+        ;;_ (prn opts)
+        opts (assoc opts
+                    :dry-run (or dry-run dry-run?)
+                    :aggressive (or aggressive aggressive?)
+                    :interactive (or interactive interactive?))
+        opts (update opts :api-namespaces set)
         opts (update opts :carve-ignore-file
                      (fn [ci]
                        (if (nil? ci) ".carve_ignore"
                            ci)))
         opts (if (:report opts)
                ;; report implies dry-run
-               (assoc opts :dry-run? true)
+               (assoc opts :dry-run true)
                opts)
-        opts (if (:dry-run? opts)
-               (assoc opts :interactive? false)
+        opts (if (:dry-run opts)
+               (assoc opts :interactive false)
                opts)
         opts (if (:out-dir opts)
                opts
@@ -42,16 +48,16 @@
     (when-not (.exists ignore-file) (.createNewFile ignore-file))
     (spit carve-ignore-file s :append true)))
 
-(defn interactive [{:keys [:carve-ignore-file]} sym]
+(defn interact [{:keys [:carve-ignore-file]} sym]
   (println (format "Type Y to remove or i to add %s to %s" sym carve-ignore-file))
   (let [input (read-line)]
     (when (= "i" input)
       (add-to-carve-ignore-file carve-ignore-file (str sym "\n")))
     input))
 
-(defn remove-locs [zloc locs locs->syms {:keys [:interactive?
-                                                :dry-run?]
-                                         :or {interactive? true}
+(defn remove-locs [zloc locs locs->syms {:keys [:interactive
+                                                :dry-run]
+                                         :or {interactive true}
                                          :as opts}]
   (loop [zloc zloc
          locs (seq locs)
@@ -68,9 +74,9 @@
               (println "------------------")
               (println (node/string node))
               (println "------------------")
-              (let [remove? (cond dry-run? false
-                                  interactive?
-                                  (= "Y" (interactive opts sym))
+              (let [remove? (cond dry-run false
+                                  interactive
+                                  (= "Y" (interact opts sym))
                                   :else true)
                     zloc (if remove? (z/remove zloc) (z/next zloc))]
                 (recur zloc (next locs) (or remove? made-changes?))))
@@ -145,13 +151,13 @@
                 :ignore-vars
                 :paths
                 :api-namespaces
-                :aggressive?
-                :dry-run?
+                :aggressive
+                :dry-run
                 :out-dir] :as opts} (sanitize-opts opts)
         ignore (map (fn [ep]
                       [(symbol (namespace ep)) (symbol (name ep))])
                     ignore-vars)
-        re-analyze? (not dry-run?)]
+        re-analyze? (not dry-run)]
     (loop [removed #{}
            results []
            analysis (analyze paths)]
@@ -187,7 +193,7 @@
                 (let [data-by-file (group-by :filename unused-vars-data)]
                   (doseq [[file vs] data-by-file]
                     (carve! file vs opts))))
-              (if aggressive?
+              (if aggressive
                 (recur (into removed unused-vars)
                        results
                        (if re-analyze?
