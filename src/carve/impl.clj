@@ -118,15 +118,15 @@
 
 (defn ignore? [api-namespaces {:keys [:ns :export :defined-by :test :private :name]}]
   (or
-   test
-   export
-   (when (contains? api-namespaces ns)
-     (not private))
-   (.startsWith (str name) "-")
-   (= 'clojure.core/deftype defined-by)
-   (= 'clojure.core/defrecord defined-by)
-   (= 'clojure.core/defprotocol defined-by)
-   (= 'clojure.core/definterface defined-by)))
+    test
+    export
+    (when (contains? api-namespaces ns)
+      (not private))
+    (= (str name) "-main")
+    (= 'clojure.core/deftype defined-by)
+    (= 'clojure.core/defrecord defined-by)
+    (= 'clojure.core/defprotocol defined-by)
+    (= 'clojure.core/definterface defined-by)))
 
 (defn reportize [results]
   (sort-by (juxt :filename :row :col)

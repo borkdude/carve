@@ -38,30 +38,39 @@
 
 (deftest ignore-main-test
   (is (false?
-       (clojure.string/includes?
-        (run-main {:paths [(.getPath (io/file "test-resources" "app"))]
+        (clojure.string/includes?
+          (run-main {:paths          [(.getPath (io/file "test-resources" "app"))]
+                     :api-namespaces ['api]
+                     :report         {:format :text}})
+          "-main"))))
+
+(deftest unused-arrow-fn-names-test
+  (is (clojure.string/includes?
+        (run-main {:paths          [(.getPath (io/file "test-resources" "app"))]
                    :api-namespaces ['api]
-                   :report {:format :text}})
-        "-main"))))
+                   :report         {:format :text}})
+        "->unused-arrow-fn")))
 
 (deftest ignore-var-test
   (is (false?
-       (clojure.string/includes?
-        (run-main {:paths [(.getPath (io/file "test-resources" "app"))]
-                   :api-namespaces ['api]
-                   :ignore-vars ['app/ignore-me]
-                   :report {:format :text}})
-        "-ignore-me"))))
+        (clojure.string/includes?
+          (run-main {:paths          [(.getPath (io/file "test-resources" "app"))]
+                     :api-namespaces ['api]
+                     :ignore-vars    ['app/ignore-me]
+                     :report         {:format :text}})
+          "-ignore-me"))))
 
 (deftest text-report-test
   (is (= (str/trim "
 test-resources/app/api.clj:3:1 api/private-lib-function
 test-resources/app/app.clj:4:1 app/unused-function
 test-resources/app/app.clj:5:1 app/another-unused-function
-test-resources/app/app.clj:9:1 app/ignore-me")
-         (str/trim (run-main {:paths [(.getPath (io/file "test-resources" "app"))]
+test-resources/app/app.clj:9:1 app/ignore-me
+test-resources/app/app.clj:11:1 app/->unused-arrow-fn
+")
+         (str/trim (run-main {:paths          [(.getPath (io/file "test-resources" "app"))]
                               :api-namespaces ['api]
-                              :report {:format :text}})))))
+                              :report         {:format :text}})))))
 
 (deftest report-exit-code-test
   (testing "Nothing to report exits with exit code 0"
