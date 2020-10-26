@@ -135,21 +135,23 @@
 
 (defn print-report [report format]
   (case format
-    :edn (prn report)
+    :edn  (prn report)
     :text (doseq [{:keys [:filename :row :col :ns :name]} report]
             (println (str filename ":" row ":" col " " ns "/" name)))
     (prn report)))
 
 (defn analyze [opts paths]
   (let [{:keys [:clj-kondo/config]} opts
-        {:keys [:var-definitions :var-usages]}
-        (:analysis (clj-kondo/run!
-                     {:lint   paths
-                      :config (merge config
-                                     {:output {:analysis true}})}))
+        result (clj-kondo/run!
+                 {:lint   paths
+                  :config (merge config {:output {:analysis true}})})
+        unused-var-refers (->> result :findings
+                               (filter #(= (:type %) :unused-referred-var)))
+        {:keys [:var-definitions :var-usages]} (:analysis result)
         var-usages (remove recursive? var-usages)]
     {:var-definitions var-definitions
-     :var-usages      var-usages}))
+     :var-usages      var-usages
+     :unused-var-refers unused-var-refers}))
 
 (defn make-absolute-paths [dir paths]
   (mapv #(.getPath (io/file dir %)) paths))
@@ -169,7 +171,7 @@
     (loop [removed #{}
            results []
            analysis (analyze opts paths)]
-      (let [{:keys [:var-definitions :var-usages]} analysis
+      (let [{:keys [:var-definitions :var-usages :unused-var-refers]} analysis
             ;; the ignore file can change by interactively adding to it, so we
             ;; have to read it in each loop
             ignore-from-config (read-carve-ignore-file carve-ignore-file)
@@ -193,6 +195,9 @@
             unused-vars (set/difference (set defined-vars) used-vars)
             unused-vars-data (map definitions-by-ns+name unused-vars)
             unused-vars-data (remove #(ignore? api-namespaces %) unused-vars-data)
+
+            ;; append unused-var-refers for removal
+            unused-vars-data (concat unused-vars-data unused-var-refers)
             ;; update unused-vars with ignored ones (deftest, etc)
             unused-vars (set (map (juxt :ns :name) unused-vars-data))
             results (into results unused-vars-data)]
@@ -206,6 +211,7 @@
                        results
                        (if re-analyze?
                          (analyze opts (make-absolute-paths out-dir paths))
-                         analysis))
+                         ;; remove unused-var-refers to prevent looping forever
+                         (dissoc analysis :unused-var-refers)))
                 (reportize results)))
           (reportize results))))))

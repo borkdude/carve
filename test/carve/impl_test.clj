@@ -24,9 +24,16 @@
                :row      11
                :col      1
                :ns       app
-               :name     ->unused-arrow-fn}}
-           (set (impl/run! {:paths       [(.getPath (io/file "test-resources" "app"))]
-                            :ignore-vars ['app/-main 'app/ignore-me] :api-namespaces ['api] :report true})))))
+               :name     ->unused-arrow-fn}
+              {:filename "test-resources/app/app.clj"
+               :row      1
+               :col      43
+               :ns       clojure.string
+               :name     split}}
+           (set (impl/run! {:paths          [(.getPath (io/file "test-resources" "app"))]
+                            :ignore-vars    ['app/-main 'app/ignore-me]
+                            :api-namespaces ['api]
+                            :report         true})))))
 
   (testing "with aggressive"
     (is (= '#{{:filename "test-resources/app/api.clj",
@@ -59,6 +66,12 @@
                :col      1
                :ns       app
                :name     ->unused-arrow-fn}
+              {:filename "test-resources/app/app.clj"
+               :row      1
+               :col      43
+               :ns       clojure.string
+               :name     split
+               }
               }
 
            (set (impl/run! {:paths       [(.getPath (io/file "test-resources" "app"))]
@@ -89,7 +102,12 @@
                :row      13
                :col      1
                :ns       app
-               :name     only-used-in-comment}}
+               :name     only-used-in-comment}
+              {:filename "test-resources/app/app.clj"
+               :row      1
+               :col      43
+               :ns       clojure.string
+               :name     split}}
            (set (impl/run! {:paths            [(.getPath (io/file "test-resources" "app"))]
                             :clj-kondo/config {:skip-comments true}
                             :ignore-vars      ['app/-main 'app/ignore-me]

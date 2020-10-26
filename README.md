@@ -107,6 +107,10 @@ Keep in mind that if you ran `carve` with `'{:paths ["src" "test"]}'`, there mig
 So after a first cycle of carving you might want to do another run with simply `{:paths ["src"]}`, which will help deleting the rest of the unused code.
 *Just beware that this will break all the tests using the code you just deleted, and you'll have to fix/delete them manually.**
 
+Carve also removes any unused refers from namespace `:require` forms. This means
+_any_ unused refer, not just refers for functions determined to be unused by
+carve.
+
 ### CI integration
 
 A good use case for Carve is the CI integration, to ensure that no one can introduce dead code into a codebase.

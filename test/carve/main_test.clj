@@ -29,12 +29,35 @@
 
 (deftest issue-11-test
   (let [tmp-dir (System/getProperty "java.io.tmpdir")]
-    (run-main {:paths [(.getPath (io/file "test-resources" "issue_11"))]
-                        :aggressive? true
-                        :interactive? false
-               :out-dir tmp-dir})
+    (run-main {:paths        [(.getPath (io/file "test-resources" "issue_11"))]
+               :aggressive?  true
+               :interactive? false
+               :out-dir      tmp-dir})
     (is (= (slurp (io/file "test-resources" "issue_11" "issue_11_expected.clj"))
            (slurp (io/file tmp-dir "test-resources" "issue_11" "issue_11.clj"))))))
+
+(deftest remove-refers-test
+  (let [tmp-dir (System/getProperty "java.io.tmpdir")]
+    (run-main {:paths        [(.getPath (io/file "test-resources" "remove_refers" "uberscript.clj"))]
+               :aggressive?  true
+               :interactive? false
+               :out-dir      tmp-dir})
+    (is (= (str/split (slurp (io/file "test-resources" "remove_refers" "uberscript_expected.clj"))
+                      #"\n")
+           (str/split (slurp (io/file tmp-dir "test-resources" "remove_refers" "uberscript.clj"))
+                      #"\n")))))
+
+(deftest remove-refers-test-two
+  (testing "unused refers in multiple namespaces"
+    (let [tmp-dir (System/getProperty "java.io.tmpdir")]
+      (run-main {:paths        [(.getPath (io/file "test-resources" "remove_refers" "uberscript_two.clj"))]
+                 :aggressive?  true
+                 :interactive? false
+                 :out-dir      tmp-dir})
+      (is (= (str/split (slurp (io/file "test-resources" "remove_refers" "uberscript_two_expected.clj"))
+                        #"\n")
+             (str/split (slurp (io/file tmp-dir "test-resources" "remove_refers" "uberscript_two.clj"))
+                        #"\n"))))))
 
 (deftest ignore-main-test
   (is (false?
@@ -60,17 +83,21 @@
                      :report         {:format :text}})
           "-ignore-me"))))
 
+
 (deftest text-report-test
-  (is (= (str/trim "
+  (is (=
+        (-> (str/trim "
 test-resources/app/api.clj:3:1 api/private-lib-function
+test-resources/app/app.clj:1:43 clojure.string/split
 test-resources/app/app.clj:4:1 app/unused-function
 test-resources/app/app.clj:5:1 app/another-unused-function
 test-resources/app/app.clj:9:1 app/ignore-me
 test-resources/app/app.clj:11:1 app/->unused-arrow-fn
-")
-         (str/trim (run-main {:paths          [(.getPath (io/file "test-resources" "app"))]
-                              :api-namespaces ['api]
-                              :report         {:format :text}})))))
+") (str/split #"\n"))
+        (-> (str/trim (run-main {:paths          [(.getPath (io/file "test-resources" "app"))]
+                                 :api-namespaces ['api]
+                                 :report         {:format :text}}))
+            (str/split #"\n")))))
 
 (deftest report-exit-code-test
   (testing "Nothing to report exits with exit code 0"

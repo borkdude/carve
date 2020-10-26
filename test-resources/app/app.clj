@@ -1,4 +1,4 @@
-(ns app)
+(ns app (:require [clojure.string :refer [split]]))
 
 (defn only-used-by-unused-function []) ;; only reported with aggressive?
 (defn unused-function [] (only-used-by-unused-function))
