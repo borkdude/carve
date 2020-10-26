@@ -96,6 +96,15 @@ test-resources/app/app.clj:11:1 app/->unused-arrow-fn
 
   (testing "Passing a non existing directory fails to validate"
     (is (thrown-with-msg?
-         clojure.lang.ExceptionInfo
-         #"Path not found"
-         (run-main {:paths ["not-existing"]})))))
+          clojure.lang.ExceptionInfo
+          #"Path not found"
+          (run-main {:paths ["not-existing"]})))))
+
+(deftest comment-only-usage-test
+  (testing "tests reporting/removal of functions only used in comment"
+    (is (clojure.string/includes?
+          (run-main {:paths            [(.getPath (io/file "test-resources" "app"))]
+                     :api-namespaces   ['api]
+                     :clj-kondo/config {:skip-comments true}
+                     :report           {:format :text}})
+          "only-used-in-comment"))))

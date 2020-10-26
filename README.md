@@ -59,6 +59,11 @@ expects an EDN map of the following options of which only `:paths` is required:
   can be `:edn` or `:text`. The text output can be interpreted by editors like
   Emacs. This option can be combined with `:aggressive`.
 - `:silent`: when truthy, does not write to stdout. Implies `:interactive false`.
+- `:clj-kondo/config`: a map of clj-kondo config opts that are passed on to
+  clj-kondo, which is used to analyze usages. e.g.: passing `{:skip-comments
+  true}` will ignore function usage in `(comment)` forms. Note that the config
+  in `.clj-kondo/config.edn` is used as well - options passed with this key will
+  override options set in the clj-kondo config file.
 
 ``` shell
 $ clojure -M:carve --opts '{:paths ["test-resources"] :dry-run true}'

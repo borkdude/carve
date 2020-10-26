@@ -24,8 +24,7 @@
                :row      11
                :col      1
                :ns       app
-               :name     ->unused-arrow-fn}
-              }
+               :name     ->unused-arrow-fn}}
            (set (impl/run! {:paths       [(.getPath (io/file "test-resources" "app"))]
                             :ignore-vars ['app/-main 'app/ignore-me] :api-namespaces ['api] :report true})))))
 
@@ -63,4 +62,35 @@
               }
 
            (set (impl/run! {:paths       [(.getPath (io/file "test-resources" "app"))]
-                            :ignore-vars ['app/-main] :api-namespaces ['api] :report true :aggressive true}))))))
+                            :ignore-vars ['app/-main] :api-namespaces ['api] :report true :aggressive true})))))
+
+  (testing "without aggressive, but skip comment usages"
+    (is (= '#{{:filename "test-resources/app/api.clj"
+               :row      3
+               :col      1
+               :ns       api
+               :name     private-lib-function}
+              {:filename "test-resources/app/app.clj"
+               :row      4
+               :col      1
+               :ns       app
+               :name     unused-function}
+              {:filename "test-resources/app/app.clj"
+               :row      5
+               :col      1
+               :ns       app
+               :name     another-unused-function}
+              {:filename "test-resources/app/app.clj"
+               :row      11
+               :col      1
+               :ns       app
+               :name     ->unused-arrow-fn}
+              {:filename "test-resources/app/app.clj"
+               :row      13
+               :col      1
+               :ns       app
+               :name     only-used-in-comment}}
+           (set (impl/run! {:paths            [(.getPath (io/file "test-resources" "app"))]
+                            :clj-kondo/config {:skip-comments true}
+                            :ignore-vars      ['app/-main 'app/ignore-me]
+                            :api-namespaces   ['api] :report true}))))))
