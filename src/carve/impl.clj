@@ -140,13 +140,16 @@
             (println (str filename ":" row ":" col " " ns "/" name)))
     (prn report)))
 
-(defn analyze [paths]
-  (let [{:keys [:var-definitions
-                :var-usages]} (:analysis (clj-kondo/run! {:lint paths
-                                                          :config {:output {:analysis true}}}))
+(defn analyze [opts paths]
+  (let [{:keys [:clj-kondo/config]} opts
+        {:keys [:var-definitions :var-usages]}
+        (:analysis (clj-kondo/run!
+                     {:lint   paths
+                      :config (merge config
+                                     {:output {:analysis true}})}))
         var-usages (remove recursive? var-usages)]
     {:var-definitions var-definitions
-     :var-usages var-usages}))
+     :var-usages      var-usages}))
 
 (defn make-absolute-paths [dir paths]
   (mapv #(.getPath (io/file dir %)) paths))
@@ -165,7 +168,7 @@
         re-analyze? (not dry-run)]
     (loop [removed #{}
            results []
-           analysis (analyze paths)]
+           analysis (analyze opts paths)]
       (let [{:keys [:var-definitions :var-usages]} analysis
             ;; the ignore file can change by interactively adding to it, so we
             ;; have to read it in each loop
@@ -202,7 +205,7 @@
                 (recur (into removed unused-vars)
                        results
                        (if re-analyze?
-                         (analyze (make-absolute-paths out-dir paths))
+                         (analyze opts (make-absolute-paths out-dir paths))
                          analysis))
                 (reportize results)))
           (reportize results))))))

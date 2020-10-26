@@ -10,5 +10,10 @@
 
 (defn ->unused-arrow-fn [] nil) ;; should be reported despite leading `-`
 
+(defn only-used-in-comment [] nil) ;; reported if :skip-comments is truthy
+
+(comment
+  (only-used-in-comment))
+
 (defn -main []
   (used-function))
