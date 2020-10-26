@@ -1,7 +1,6 @@
 # Carve
 
 [![CircleCI](https://circleci.com/gh/borkdude/carve/tree/master.svg?style=shield)](https://circleci.com/gh/borkdude/carve/tree/master)
-[![codecov](https://codecov.io/gh/borkdude/carve/branch/master/graph/badge.svg)](https://codecov.io/gh/borkdude/carve)
 
 Carve out the essentials of your Clojure app.
 
