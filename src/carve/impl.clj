@@ -135,21 +135,23 @@
 
 (defn print-report [report format]
   (case format
-    :edn (prn report)
+    :edn  (prn report)
     :text (doseq [{:keys [:filename :row :col :ns :name]} report]
             (println (str filename ":" row ":" col " " ns "/" name)))
     (prn report)))
 
 (defn analyze [opts paths]
   (let [{:keys [:clj-kondo/config]} opts
-        {:keys [:var-definitions :var-usages]}
-        (:analysis (clj-kondo/run!
-                     {:lint   paths
-                      :config (merge config
-                                     {:output {:analysis true}})}))
+        result (clj-kondo/run!
+                 {:lint   paths
+                  :config (merge config {:output {:analysis true}})})
+        unused-var-refers (->> result :findings
+                               (filter #(= (:type %) :unused-referred-var)))
+        {:keys [:var-definitions :var-usages]} (:analysis result)
         var-usages (remove recursive? var-usages)]
     {:var-definitions var-definitions
-     :var-usages      var-usages}))
+     :var-usages      var-usages
+     :unused-var-refers unused-var-refers}))
 
 (defn make-absolute-paths [dir paths]
   (mapv #(.getPath (io/file dir %)) paths))
@@ -169,7 +171,7 @@
     (loop [removed #{}
            results []
            analysis (analyze opts paths)]
-      (let [{:keys [:var-definitions :var-usages]} analysis
+      (let [{:keys [:var-definitions :var-usages :unused-var-refers]} analysis
             ;; the ignore file can change by interactively adding to it, so we
             ;; have to read it in each loop
             ignore-from-config (read-carve-ignore-file carve-ignore-file)
@@ -196,9 +198,11 @@
             ;; update unused-vars with ignored ones (deftest, etc)
             unused-vars (set (map (juxt :ns :name) unused-vars-data))
             results (into results unused-vars-data)]
-        (if (seq unused-vars-data)
+        (if (or (seq unused-vars-data) (seq unused-var-refers))
           (do (when-not (:report opts)
-                (let [data-by-file (group-by :filename unused-vars-data)]
+                (let [data-by-file (->> unused-vars-data
+                                        (concat unused-var-refers)
+                                        (group-by :filename))]
                   (doseq [[file vs] data-by-file]
                     (carve! file vs opts))))
               (if aggressive
@@ -206,6 +210,7 @@
                        results
                        (if re-analyze?
                          (analyze opts (make-absolute-paths out-dir paths))
-                         analysis))
+                         ;; remove unused-var-refers to prevent looping forever
+                         (dissoc analysis :unused-var-refers)))
                 (reportize results)))
           (reportize results))))))

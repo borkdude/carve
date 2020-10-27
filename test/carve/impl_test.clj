@@ -25,8 +25,10 @@
                :col      1
                :ns       app
                :name     ->unused-arrow-fn}}
-           (set (impl/run! {:paths       [(.getPath (io/file "test-resources" "app"))]
-                            :ignore-vars ['app/-main 'app/ignore-me] :api-namespaces ['api] :report true})))))
+           (set (impl/run! {:paths          [(.getPath (io/file "test-resources" "app"))]
+                            :ignore-vars    ['app/-main 'app/ignore-me]
+                            :api-namespaces ['api]
+                            :report         true})))))
 
   (testing "with aggressive"
     (is (= '#{{:filename "test-resources/app/api.clj",
@@ -58,8 +60,7 @@
                :row      11
                :col      1
                :ns       app
-               :name     ->unused-arrow-fn}
-              }
+               :name     ->unused-arrow-fn}}
 
            (set (impl/run! {:paths       [(.getPath (io/file "test-resources" "app"))]
                             :ignore-vars ['app/-main] :api-namespaces ['api] :report true :aggressive true})))))
