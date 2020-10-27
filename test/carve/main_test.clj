@@ -88,7 +88,6 @@
   (is (=
         (-> (str/trim "
 test-resources/app/api.clj:3:1 api/private-lib-function
-test-resources/app/app.clj:1:43 clojure.string/split
 test-resources/app/app.clj:4:1 app/unused-function
 test-resources/app/app.clj:5:1 app/another-unused-function
 test-resources/app/app.clj:9:1 app/ignore-me

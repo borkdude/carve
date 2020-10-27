@@ -195,15 +195,14 @@
             unused-vars (set/difference (set defined-vars) used-vars)
             unused-vars-data (map definitions-by-ns+name unused-vars)
             unused-vars-data (remove #(ignore? api-namespaces %) unused-vars-data)
-
-            ;; append unused-var-refers for removal
-            unused-vars-data (concat unused-vars-data unused-var-refers)
             ;; update unused-vars with ignored ones (deftest, etc)
             unused-vars (set (map (juxt :ns :name) unused-vars-data))
             results (into results unused-vars-data)]
-        (if (seq unused-vars-data)
+        (if (or (seq unused-vars-data) (seq unused-var-refers))
           (do (when-not (:report opts)
-                (let [data-by-file (group-by :filename unused-vars-data)]
+                (let [data-by-file (->> unused-vars-data
+                                        (concat unused-var-refers)
+                                        (group-by :filename))]
                   (doseq [[file vs] data-by-file]
                     (carve! file vs opts))))
               (if aggressive
