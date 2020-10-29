@@ -28,12 +28,6 @@ jobs:
           name: Run JVM tests
           command: |
             script/test
-      - store_test_results:
-          path: test-results
-
-      - store_artifacts:
-          path: target/coverage
-
       - save_cache:
           paths:
             - ~/.m2
