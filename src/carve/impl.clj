@@ -6,6 +6,7 @@
    [clojure.edn :as edn]
    [clojure.java.io :as io]
    [clojure.set :as set]
+   [clojure.string :as str]
    [rewrite-cljc.node :as node]
    [rewrite-cljc.zip :as z]))
 
@@ -52,41 +53,75 @@
     (spit carve-ignore-file s :append true)))
 
 (defn interact [{:keys [:carve-ignore-file]} sym]
-  (println (format "Type Y to remove or i to add %s to %s" sym carve-ignore-file))
+  (println
+    (if sym
+      (format "Type Y to remove or i to add %s to %s" sym carve-ignore-file)
+      ;; no sym means nothing valid to add to carve-ignore
+      "Type Y to remove."))
   (let [input (read-line)]
-    (when (= "i" input)
+    (when (and (= "i" input) sym)
       (add-to-carve-ignore-file carve-ignore-file (str sym "\n")))
     input))
 
-(defn remove-locs [zloc locs locs->syms {:keys [:interactive
-                                                :dry-run
-                                                :silent]
-                                         :or {interactive true}
-                                         :as opts}]
-  (loop [zloc zloc
-         locs (seq locs)
+(defn loc-context [file [row col]]
+  (when-let [content (some-> file io/file slurp)]
+    (let [line           row
+          matching-line  (dec line)
+          start-line     (max (- matching-line 4) 0)
+          end-line       (+ matching-line 6)
+          [before after] (->>
+                           (str/split-lines content)
+                           (map-indexed list)
+                           (drop start-line)
+                           (take (- end-line start-line))
+                           (split-at (inc (- matching-line start-line))))
+          snippet-lines  (concat before
+                                 [[nil (str (str/join "" (repeat (dec col) " "))
+                                            (str "^--- unused var"))]]
+                                 after)
+          indices        (map first snippet-lines)
+          max-size       (reduce max 0 (map (comp count str) indices))
+          snippet-lines  (map (fn [[idx line]]
+                                (if idx
+                                  (let [line-number (inc idx)]
+                                    (str (format (str "%" max-size "d: ") line-number) line))
+                                  (str (str/join (repeat (+ max-size 2) " ")) line)))
+                              snippet-lines)]
+      (str/join "\n" snippet-lines))))
+
+(defn remove-locs [file zloc locs locs->syms
+                   {:keys [:interactive
+                           :dry-run
+                           :silent]
+                    :or   {interactive true}
+                    :as   opts}]
+  (loop [zloc          zloc
+         locs          (seq locs)
          made-changes? false]
     (if locs
       (let [[row col :as loc] (first locs)
-            node (z/node zloc)
-            m (meta node)
-            sym (get locs->syms loc)]
+            node              (z/node zloc)
+            m                 (meta node)]
         ;; (prn sym)
         (if (and (= row (:row m))
                  (= col (:col m)))
-          (do (when-not silent
-                (println "Found unused var:")
-                (println "------------------")
-                (println (node/string node))
-                (println "------------------"))
-              (let [remove? (cond dry-run false
-                                  interactive
-                                  (= "Y" (interact opts sym))
-                                  :else true)
-                    zloc (if remove? (z/remove zloc) (z/next zloc))]
-                (recur zloc (next locs) (or remove? made-changes?))))
+          (let [sym     (get locs->syms loc)
+                context (if sym (node/string node)
+                            ;; get surrounding lines if no sym found
+                            (loc-context file loc))]
+            (when-not silent
+              (println "Found unused var:")
+              (println "------------------")
+              (println context)
+              (println "------------------"))
+            (let [remove? (cond dry-run false
+                                interactive
+                                (= "Y" (interact opts sym))
+                                :else   true)
+                  zloc    (if remove? (z/remove zloc) (z/next zloc))]
+              (recur zloc (next locs) (or remove? made-changes?))))
           (recur (z/next zloc) locs made-changes?)))
-      {:zloc zloc
+      {:zloc          zloc
        :made-changes? made-changes?})))
 
 (defn recursive? [{:keys [:from :from-var :to :name]}]
@@ -97,16 +132,19 @@
   "Removes unused vars from file."
   [file vs {:keys [:out-dir :silent] :as opts}]
   (let [zloc (z/of-file file)
-        locs->syms (into {}
-                         (map (fn [{:keys [:row :col :ns :name]}]
-                                [[row col] (symbol (str ns) (str name))]) vs))
+        locs->syms (->> vs
+                        (map (fn [{:keys [:row :col :ns :name]}]
+                               [[row col]
+                                (when (and ns name) ;; otherwise, nil sym
+                                  (symbol (str ns) (str name)))]))
+                        (into {}))
         locs (keys locs->syms)
         locs (sort locs)
         _ (when (and (not silent) (seq locs))
             (println "Carving" file)
             (println))
         {:keys [:made-changes? :zloc]}
-        (remove-locs zloc locs locs->syms opts)]
+        (remove-locs file zloc locs locs->syms opts)]
     (when made-changes?
       (let [file (io/file file)
             file (if (.isAbsolute file) file

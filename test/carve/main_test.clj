@@ -134,3 +134,39 @@ test-resources/app/app.clj:11:1 app/->unused-arrow-fn
                      :clj-kondo/config {:skip-comments true}
                      :report           {:format :text}})
           "only-used-in-comment"))))
+
+(deftest interactive-tests
+  (testing "pressing `Y` removes vars as expected"
+    (with-in-str "Y\nY\n"
+      (let [tmp-dir (System/getProperty "java.io.tmpdir")]
+        (run-main {:paths        [(.getPath (io/file "test-resources" "interactive" "remove_all.clj"))]
+                   :interactive? true
+                   :out-dir      tmp-dir})
+        (is (= (str/split (slurp (io/file "test-resources" "interactive" "remove_all_expected.clj"))
+                          #"\n")
+               (str/split (slurp (io/file tmp-dir "test-resources" "interactive" "remove_all.clj"))
+                          #"\n"))))))
+
+  (testing "Yes and then `skip` (pressing `return`) removes the first but not second var"
+    (with-in-str "Y\n" ;; empty
+      (let [tmp-dir (System/getProperty "java.io.tmpdir")]
+        (run-main {:paths        [(.getPath (io/file "test-resources" "interactive" "leave_function.clj"))]
+                   :interactive? true
+                   :out-dir      tmp-dir})
+        (is (= (str/split (slurp (io/file "test-resources" "interactive" "leave_function_expected.clj"))
+                          #"\n")
+               (str/split (slurp (io/file tmp-dir "test-resources" "interactive" "leave_function.clj"))
+                          #"\n")))))))
+
+(deftest interactive-refer-removal-context
+  (testing "removing a referral interactively shows some context"
+    (with-in-str "" ;; empty string is effectively the user hitting `return` to all prompts
+      (is (clojure.string/includes?
+            (run-main {:paths       [(.getPath (io/file "test-resources" "app"))]
+                       :dry-run     true
+                       :interactive true})
+            ;; perhaps this is too exact a match
+            "Found unused var:
+------------------
+1: (ns app (:require [clojure.string :refer [split]]))
+                                             ^--- unused var")))))
