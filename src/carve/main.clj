@@ -51,12 +51,18 @@
   (when-not (every? valid-path? paths)
     (throw (ex-info "Path not found" {:paths paths}))))
 
+(defn- load-opts
+  [opts]
+  (let [opts (if (valid-path? opts) (slurp opts) opts)
+        opts (edn/read-string opts)]
+    (validate-opts! opts)
+    opts))
+
 (defn main
   [& [flag opts & _args]]
   (when-not (= "--opts" flag)
     (throw (ex-info (str "Unrecognized option: " flag) {:flag flag})))
-  (let [opts (edn/read-string opts)
-        _ (validate-opts! opts)
+  (let [opts (load-opts opts)
         format (-> opts :report :format)
         report (impl/run! opts)]
     (when format
