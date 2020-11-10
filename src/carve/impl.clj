@@ -2,6 +2,7 @@
   {:no-doc true}
   (:refer-clojure :exclude [run!])
   (:require
+   [clojure.java.shell :refer [sh]]
    [clj-kondo.core :as clj-kondo]
    [clojure.edn :as edn]
    [clojure.java.io :as io]
@@ -194,6 +195,12 @@
 (defn make-absolute-paths [dir paths]
   (mapv #(.getPath (io/file dir %)) paths))
 
+(def sample-verify
+  {#".clj$" "/home/andrea/.local/bin/lein test"})
+
+(defn copy-file [source-path dest-path]
+  (io/copy (io/file source-path) (io/file dest-path)))
+
 (defn run! [opts]
   (let [{:keys [:carve-ignore-file
                 :ignore-vars
@@ -223,10 +230,10 @@
             ;; clj-kondo since we already removed some of the functions, not all
             ;; usage may be relevant anymore
             var-usages (remove (fn [usage]
-                                (let [from-var (:from-var usage)
-                                      from-ns (:from usage)]
-                                  (and from-var from-ns
-                                       (contains? removed [from-ns from-var]))))
+                                 (let [from-var (:from-var usage)
+                                       from-ns (:from usage)]
+                                   (and from-var from-ns
+                                        (contains? removed [from-ns from-var]))))
                                var-usages)
             used-vars (set (map (juxt :to :name) var-usages))
             used-vars (reduce into used-vars [ignore-from-config ignore])
@@ -242,6 +249,13 @@
                                         (concat unused-var-refers)
                                         (group-by :filename))]
                   (doseq [[file vs] data-by-file]
+                    (println (:out (sh "lein test")))
+                    (println "Running on file = " file)
+                    (copy-file file (str file ".bak"))
+                    (for [[k v] sample-verify]
+                      (when-not (re-matches k (zero? (:exit (sh v))))
+                        (println "restoring backup file")
+                        (copy-file (str file ".bak") file)))
                     (carve! file vs opts))))
               (if aggressive
                 (recur (into removed unused-vars)
