@@ -53,6 +53,7 @@
 
 (defn- load-opts
   [opts]
+  (println "got opts = " opts)
   (let [opts (if (valid-path? opts) (slurp opts) opts)
         opts (edn/read-string opts)]
     (validate-opts! opts)

@@ -195,8 +195,13 @@
 (defn make-absolute-paths [dir paths]
   (mapv #(.getPath (io/file dir %)) paths))
 
+(defn kr-run
+  []
+  (require '[kaocha.repl :as kr])
+  (kr/run-all))
+
 (def sample-verify
-  {#".clj$" "/home/andrea/.local/bin/lein test"})
+  {#".clj$" "false"})
 
 (defn copy-file [source-path dest-path]
   (io/copy (io/file source-path) (io/file dest-path)))
@@ -249,8 +254,8 @@
                                         (concat unused-var-refers)
                                         (group-by :filename))]
                   (doseq [[file vs] data-by-file]
-                    (println (:out (sh "lein test")))
-                    (println "Running on file = " file)
+                    ;; (println (:out (sh "lein test")))
+                    ;; (println "Running on file = " file)
                     (copy-file file (str file ".bak"))
                     (for [[k v] sample-verify]
                       (when-not (re-matches k (zero? (:exit (sh v))))
