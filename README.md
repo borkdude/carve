@@ -40,6 +40,14 @@ The usage for a typical Clojure app looks like:
 clojure -M:carve --opts '{:paths ["src" "test"]}'
 ```
 
+Or:
+
+```
+clojure -M:carve --opts carve.edn'
+```
+
+where `carve.edn` is an edn file containing the opts map.
+
 Currently `carve` only has one command line option, `--opts`, which
 expects an EDN map of the following options of which only `:paths` is required:
 
