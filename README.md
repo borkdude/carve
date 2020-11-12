@@ -43,10 +43,10 @@ clojure -M:carve --opts '{:paths ["src" "test"]}'
 Or:
 
 ```
-clojure -M:carve --opts config.edn'
+clojure -M:carve --opts carve.edn'
 ```
 
-where `config.edn` is an edn file containing the opts map.
+where `carve.edn` is an edn file containing the opts map.
 
 Currently `carve` only has one command line option, `--opts`, which
 expects an EDN map of the following options of which only `:paths` is required:
