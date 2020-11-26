@@ -43,7 +43,7 @@ clojure -M:carve --opts '{:paths ["src" "test"]}'
 Or:
 
 ```
-clojure -M:carve --opts carve.edn'
+clojure -M:carve --opts carve.edn
 ```
 
 where `carve.edn` is an edn file containing the opts map.
