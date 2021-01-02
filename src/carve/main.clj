@@ -61,14 +61,18 @@
 
 (defn main
   [& [flag opts & _args]]
-  (when-not (= "--opts" flag)
-    (throw (ex-info (str "Unrecognized option: " flag) {:flag flag})))
-  (let [opts (load-opts opts)
-        format (-> opts :report :format)
-        report (impl/run! opts)]
-    (when format
-      (impl/print-report report format))
-    (if (empty? report) 0 1)))
+  (if (and (not flag) (not (.exists (io/file ".carve/config.edn"))))
+    (binding [*err* *out*]
+      (println "See https://github.com/borkdude/carve#usage on how to use carve.")
+      1)
+    (do (when-not (= "--opts" flag)
+          (throw (ex-info (str "Unrecognized option: " flag) {:flag flag})))
+        (let [opts (load-opts opts)
+              format (-> opts :report :format)
+              report (impl/run! opts)]
+          (when format
+            (impl/print-report report format))
+          (if (empty? report) 0 1)))))
 
 (defn -main
   [& options]

@@ -55,10 +55,10 @@ expects an EDN map of the following options of which only `:paths` is required:
 - `:ignore-vars`: a list of vars to ignore. Useful for when the analyzer has it wrong or you just want to keep the var for whatever reason.
 - `:api-namespaces`: a list of namespaces of which only unused private vars will
   be reported.
-- `:carve-ignore-file`: a file where ignored vars can be stored, `.carve_ignore`
+- `:carve-ignore-file`: a file where ignored vars can be stored, `.carve/ignore`
   by default.
 - `:interactive`: ask what to do with an unused var: remove from the file, add
-  to `.carve_ignore` or continue. Set to `true` by default.
+  to `.carve/ignore` or continue. Set to `true` by default.
 - `:out-dir`: instead of writing back to the original file, write to this dir.
 - `:dry-run`: just print the unused var expression.
 - `:aggressive`: runs multiple times until no unused vars are left. Defaults to `false`.
@@ -97,16 +97,16 @@ Carving test-resources/app.clj
 Found unused var:
 (defn unused-function [])
 
-Type Y to remove or i to add app/unused-function to .carve_ignore
+Type Y to remove or i to add app/unused-function to .carve/ignore
 n
 Found unused var:
 (defn another-unused-function [])
 
-Type Y to remove or i to add app/another-unused-function to .carve_ignore
+Type Y to remove or i to add app/another-unused-function to .carve/ignore
 i
 ...
 
-$ cat .carve_ignore
+$ cat .carve/ignore
 app/another-unused-function
 ```
 

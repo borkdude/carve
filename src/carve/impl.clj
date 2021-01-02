@@ -16,7 +16,11 @@
 
 (defn sanitize-opts [opts]
   (when (empty? (:paths opts)) (throw (ex-info ":paths must not be empty" opts)))
-  (let [{:keys [:dry-run? :dry-run :aggressive? :aggressive :interactive? :interactive]} opts
+  (let [config (let [defaults-file (io/file ".carve/config.edn")]
+                       (when (.exists defaults-file)
+                         (edn/read-string (slurp defaults-file))))
+        opts (merge-with merge config opts)
+        {:keys [:dry-run? :dry-run :aggressive? :aggressive :interactive? :interactive]} opts
         ;;_ (prn opts)
         opts (assoc opts
                     :dry-run (or dry-run dry-run?)
@@ -28,8 +32,14 @@
         opts (update opts :api-namespaces set)
         opts (update opts :carve-ignore-file
                      (fn [ci]
-                       (if (nil? ci) ".carve_ignore"
-                           ci)))
+                       (if (nil? ci)
+                         (if (.exists (io/file ".carve_ignore"))
+                           (do
+                             (binding [*out* *err*]
+                               (println "The .carve_ignore file is deprecated. Please move it to .carve/ignore."))
+                             ".carve_ignore")
+                           ".carve/ignore")
+                         ci)))
         opts (if (:report opts)
                ;; report implies dry-run
                (assoc opts :dry-run true)
@@ -52,7 +62,9 @@
 
 (defn add-to-carve-ignore-file [carve-ignore-file s]
   (let [ignore-file (io/file carve-ignore-file)]
-    (when-not (.exists ignore-file) (.createNewFile ignore-file))
+    (when-not (.exists ignore-file)
+      (io/make-parents ignore-file)
+      (.createNewFile ignore-file))
     (spit carve-ignore-file s :append true)))
 
 (defn interact [{:keys [:carve-ignore-file]} sym]
