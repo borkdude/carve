@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+if [ -z "$GRAALVM_HOME" ]; then
+    echo "Please set $GRAALVM_HOME"
+    exit 1
+fi
+
+clojure -J-Dclojure.compiler.direct-linking=true -X:native:uberjar
+
+"$GRAALVM_HOME/bin/gu" install native-image
+
+"$GRAALVM_HOME/bin/native-image" \
+    -cp "carve.jar" \
+    -H:Name=carve \
+    -H:+ReportExceptionStackTraces \
+    --initialize-at-build-time  \
+    -H:EnableURLProtocols=jar \
+    --report-unsupported-elements-at-runtime \
+    --verbose \
+    --no-fallback \
+    --no-server \
+    "-J-Xmx3g" \
+    carve.main

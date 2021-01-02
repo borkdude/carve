@@ -1,3 +1,5 @@
 /.cpcache
 /target/
 .dir-locals.el
+/carve
+/carve.jar

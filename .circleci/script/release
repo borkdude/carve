@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+rm -rf /tmp/release
+mkdir -p /tmp/release
+cp carve /tmp/release
+VERSION=$(cat resources/CARVE_VERSION)
+
+cd /tmp/release
+
+## release binary as zip archive
+
+zip "carve-$VERSION-$APP_PLATFORM-amd64.zip" carve
+
+## cleanup
+
+rm carve

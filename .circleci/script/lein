@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+echo '{:a 1}' | lein jet --from edn --to json
