@@ -1,5 +1,5 @@
 {:deps {clj-kondo/clj-kondo {:git/url "https://github.com/borkdude/clj-kondo"
-                             :sha "3f842a99eb6da64b3ca6e952ddb7f00278e36c87"}
+                             :sha "0d31f63e40f220dff88670335ad639d39647314c"}
         borkdude/rewrite-cljc {:git/url "https://github.com/borkdude/rewrite-cljc-playground"
                                :sha "a60f2d3b172c6a8f1c25875f2af6c964b3f5fcc0"}
         expound/expound {:mvn/version "0.8.6"}}
@@ -12,4 +12,14 @@
                   :extra-deps {org.clojure/test.check {:mvn/version "0.10.0"}
                                com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
                                                           :sha "209b64504cb3bd3b99ecfec7937b358a879f55c1"}}
-                  :main-opts ["-m" "cognitect.test-runner"]}}}
+                  :main-opts ["-m" "cognitect.test-runner"]}
+           :uberjar
+           {:replace-deps ; tool usage is new in 2.x
+            {seancorfield/depstar {:mvn/version "2.0.165"}}
+            :ns-default hf.depstar
+            :exec-fn uberjar
+            :exec-args {:jar carve.jar
+                        :compile-ns [carve.main]
+                        :aliases [:native]}}
+           :native {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]
+                    :extra-deps {org.clojure/clojure {:mvn/version "1.10.2-rc1"}}}}}

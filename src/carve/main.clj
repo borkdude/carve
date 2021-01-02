@@ -4,10 +4,10 @@
    [clojure.edn :as edn]
    [clojure.java.io :as io]
    [clojure.spec.alpha :as s]
-   [expound.alpha :as expound]))
+   [expound.alpha :as expound])
+  (:gen-class))
 
 (set! *warn-on-reflection* true)
-(set! s/*explain-out* expound/printer)
 (s/check-asserts true)
 
 (s/def ::paths (s/coll-of string?))
@@ -47,7 +47,8 @@
 (defn validate-opts!
   "Validate options throwing an exception if they don't validate"
   [{:keys [paths] :as opts}]
-  (s/assert ::opts opts)
+  (binding [s/*explain-out* expound/printer]
+    (s/assert ::opts opts))
   (when-not (every? valid-path? paths)
     (throw (ex-info "Path not found" {:paths paths}))))
 

@@ -21,7 +21,10 @@
         opts (assoc opts
                     :dry-run (or dry-run dry-run?)
                     :aggressive (or aggressive aggressive?)
-                    :interactive (or interactive interactive?))
+                    :interactive (if-not (or (contains? opts :interactive?)
+                                             (contains? opts :interactive))
+                                   true
+                                   (or interactive interactive?)))
         opts (update opts :api-namespaces set)
         opts (update opts :carve-ignore-file
                      (fn [ci]
