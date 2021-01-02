@@ -14,6 +14,23 @@ Experimental. Use with caution! Breaking changes may happen. Feedback and bugfix
 
 ## Installation
 
+### CLI
+
+#### Brew (linux and macOS)
+
+     brew install borkdude/brew/carve
+
+<!-- #### Scoop (Windows) -->
+
+<!-- See [scoop-clojure](https://github.com/littleli/scoop-clojure). -->
+
+### Manual
+
+Grab the binary for your OS at [Github releases](https://github.com/borkdude/carve/releases).
+
+
+### JVM
+
 Add to your `deps.edn` under the `:aliases` key:
 
 ``` clojure
@@ -36,25 +53,26 @@ Carve invokes [clj-kondo](https://github.com/borkdude/clj-kondo) and uses the [a
 
 The usage for a typical Clojure app looks like:
 
+``` shell
+carve --opts '{:paths ["src" "test"]}'
+```
+
+for the CLI or:
+
 ```
 clojure -M:carve --opts '{:paths ["src" "test"]}'
 ```
 
-Or:
-
-```
-clojure -M:carve --opts carve.edn'
-```
-
-where `carve.edn` is an edn file containing the opts map.
+on the JVM.
 
 You can also store the config for your project in `.carve/config.edn`. When
 invoking carve with no options, the options in `.carve/config.edn` will be
 used. When providing options, the CLI options will be merged into those provided
 in `.carve/config.edn`.
 
-Currently `carve` only has one command line option, `--opts`, which
-expects an EDN map of the following options of which only `:paths` is required:
+Currently `carve` only has one command line option, `--opts`, which expects an
+EDN map or EDN file with the following options of which only `:paths` is
+required:
 
 - `:paths`: a list of paths to analyze. Can be a mix of individual files and directories.
 - `:ignore-vars`: a list of vars to ignore. Useful for when the analyzer has it wrong or you just want to keep the var for whatever reason.
