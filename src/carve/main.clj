@@ -52,27 +52,37 @@
   (when-not (every? valid-path? paths)
     (throw (ex-info "Path not found" {:paths paths}))))
 
+(defn merger [a b]
+  (if (coll? a)
+    (into a b)
+    b))
+
 (defn- load-opts
-  [opts]
-  (let [opts (if (valid-path? opts) (slurp opts) opts)
-        opts (edn/read-string opts)]
+  [config opts]
+  (let [opts (if (and opts (valid-path? opts))
+               (slurp opts) opts)
+        opts (edn/read-string opts)
+        opts (merge-with merger config opts)]
     (validate-opts! opts)
     opts))
 
 (defn main
   [& [flag opts & _args]]
-  (if (and (not flag) (not (.exists (io/file ".carve/config.edn"))))
-    (binding [*err* *out*]
-      (println "See https://github.com/borkdude/carve#usage on how to use carve.")
-      1)
-    (do (when-not (= "--opts" flag)
-          (throw (ex-info (str "Unrecognized option: " flag) {:flag flag})))
-        (let [opts (load-opts opts)
-              format (-> opts :report :format)
-              report (impl/run! opts)]
-          (when format
-            (impl/print-report report format))
-          (if (empty? report) 0 1)))))
+  (let [config-file (io/file ".carve/config.edn")
+        config (when (.exists config-file)
+                 (edn/read-string (slurp config-file)))]
+    (if (and (not flag) (not config))
+      (binding [*err* *out*]
+        (println "No config found in .carve/config.edn.\nSee https://github.com/borkdude/carve#usage on how to use carve.")
+        1)
+      (do (when (and (not (= "--opts" flag)) (not config))
+            (throw (ex-info (str "Unrecognized option: " flag) {:flag flag})))
+          (let [opts (load-opts config opts)
+                format (-> opts :report :format)
+                report (impl/run! opts)]
+            (when format
+              (impl/print-report report format))
+            (if (empty? report) 0 1))))))
 
 (defn -main
   [& options]

@@ -48,6 +48,11 @@ clojure -M:carve --opts carve.edn'
 
 where `carve.edn` is an edn file containing the opts map.
 
+You can also store the config for your project in `.carve/config.edn`. When
+invoking carve with no options, the options in `.carve/config.edn` will be
+used. When providing options, the CLI options will be merged into those provided
+in `.carve/config.edn`.
+
 Currently `carve` only has one command line option, `--opts`, which
 expects an EDN map of the following options of which only `:paths` is required:
 
@@ -175,6 +180,6 @@ or alter the command used by `cider-jack-in` by prefixing the invocation with
 
 ## License
 
-Copyright © 2019-2020 Michiel Borkent
+Copyright © 2019-2021 Michiel Borkent
 
 Distributed under the EPL License. See LICENSE.

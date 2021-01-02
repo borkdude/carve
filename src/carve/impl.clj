@@ -16,11 +16,7 @@
 
 (defn sanitize-opts [opts]
   (when (empty? (:paths opts)) (throw (ex-info ":paths must not be empty" opts)))
-  (let [config (let [defaults-file (io/file ".carve/config.edn")]
-                       (when (.exists defaults-file)
-                         (edn/read-string (slurp defaults-file))))
-        opts (merge-with merge config opts)
-        {:keys [:dry-run? :dry-run :aggressive? :aggressive :interactive? :interactive]} opts
+  (let [{:keys [:dry-run? :dry-run :aggressive? :aggressive :interactive? :interactive]} opts
         ;;_ (prn opts)
         opts (assoc opts
                     :dry-run (or dry-run dry-run?)
