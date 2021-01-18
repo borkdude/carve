@@ -170,3 +170,9 @@ test-resources/app/app.clj:11:1 app/->unused-arrow-fn
 ------------------
 1: (ns app (:require [clojure.string :refer [split]]))
                                              ^--- unused var")))))
+
+(deftest load-config-test
+  (testing "passing arguments from the cli overrides the configuration"
+    (is (= {:paths ["src"]}
+           (#'main/load-opts {:paths ["src" "test"]}
+                             "{:paths [\"src\"]}")))))
