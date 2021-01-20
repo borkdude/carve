@@ -94,7 +94,7 @@ required:
 - `:aggressive`: runs multiple times until no unused vars are left. Defaults to `false`.
 - `:report`: when truthy, prints unused vars to stdout. Implies `:dry-run
   true`. The output format may be set using `:report {:format ...}` where format
-  can be `:edn` or `:text`. The text output can be interpreted by editors like
+  can be `:edn`, `:text` or `:ignore`. The text output can be interpreted by editors like
   Emacs. This option can be combined with `:aggressive`.
 - `:silent`: when truthy, does not write to stdout. Implies `:interactive false`.
 - `:clj-kondo/config`: a map of clj-kondo config opts that are passed on to
@@ -187,14 +187,19 @@ Running carve with in report mode (for example `clojure -M:carve --opts '{:paths
 ["src" "test"] :report {:format :text}}'`) you can make all the links clickable
 by switching to compilation-mode.
 
-
 <img src="assets/eshell.png">
+
+Using `:report {:format :ignore}` returns the list of unused vars in the same format as .carve/ignore so you can create the initial ignore file or append to an existing one.
+For example with:
+
+    carve --opts '{:paths ["src" "test"] :report {:format :ignore}}' > .carve/ignore
 
 ## Articles
 
 - [Carve that Clojure codebase](https://juxt.pro/blog/carve) by Andrea Crotti
 
 ## Dev
+
 
 ### Running tests
 
