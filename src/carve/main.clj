@@ -52,17 +52,12 @@
   (when-not (every? valid-path? paths)
     (throw (ex-info "Path not found" {:paths paths}))))
 
-(defn merger [a b]
-  (if (coll? a)
-    (into a b)
-    b))
-
 (defn- load-opts
+  "Load options, giving higher precedence to options passed from the CLI"
   [config opts]
-  (let [opts (if (and opts (valid-path? opts))
-               (slurp opts) opts)
-        opts (edn/read-string opts)
-        opts (merge-with merger config opts)]
+  (let [opts (if opts
+               (edn/read-string opts)
+               config)]
     (validate-opts! opts)
     opts))
 

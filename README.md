@@ -73,9 +73,9 @@ clojure -M:carve --opts '{:paths ["src" "test"]}'
 on the JVM.
 
 You can also store the config for your project in `.carve/config.edn`. When
-invoking carve with no options, the options in `.carve/config.edn` will be
-used. When providing options, the CLI options will be merged into those provided
-in `.carve/config.edn`.
+invoking carve with no options, the options in `.carve/config.edn` will be used.
+When providing options, the CLI options will take precedence over the configuration
+in`.carve/config.edn`.
 
 Currently `carve` only has one command line option, `--opts`, which expects an
 EDN map or EDN file with the following options of which only `:paths` is
