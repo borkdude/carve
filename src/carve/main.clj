@@ -18,7 +18,7 @@
 (s/def ::interactive? boolean?) ;; deprecated
 (s/def ::dry-run boolean?)
 (s/def ::dry-run? boolean?) ;; deprecated
-(s/def ::format #{:edn :text})
+(s/def ::format #{:edn :text :ignore})
 (s/def ::aggressive boolean?)
 (s/def ::aggressive? boolean?) ;; deprecated
 (s/def ::out-dir string?)

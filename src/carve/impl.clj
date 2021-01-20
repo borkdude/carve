@@ -187,6 +187,8 @@
     :edn  (prn report)
     :text (doseq [{:keys [:filename :row :col :ns :name]} report]
             (println (str filename ":" row ":" col " " ns "/" name)))
+    :ignore (doseq [{:keys [:ns :name]} report]
+              (println (str ns "/" name)))
     (prn report)))
 
 (defn analyze [opts paths]
