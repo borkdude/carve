@@ -7,8 +7,8 @@
    [clojure.java.io :as io]
    [clojure.set :as set]
    [clojure.string :as str]
-   [rewrite-cljc.node :as node]
-   [rewrite-cljc.zip :as z]))
+   [rewrite-clj.node :as node]
+   [rewrite-clj.zip :as z]))
 
 (defn index-by
   [f coll]

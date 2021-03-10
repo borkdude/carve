@@ -8,8 +8,7 @@
             :url "https://www.eclipse.org/legal/epl-1.0/"}
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [clj-kondo "2020.05.09"]
-                 ;; TODO: lread's rewrite-clj
-                 ]
+                 [rewrite-clj "1.0.572-alpha"]]
   :plugins [[reifyhealth/lein-git-down "0.3.6"]]
   :deploy-repositories [["clojars" {:url "https://clojars.org/repo"
                                     :username :env/clojars_user
