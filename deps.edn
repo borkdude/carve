@@ -1,7 +1,6 @@
 {:deps {clj-kondo/clj-kondo {:git/url "https://github.com/borkdude/clj-kondo"
                              :sha "0d31f63e40f220dff88670335ad639d39647314c"}
-        borkdude/rewrite-cljc {:git/url "https://github.com/borkdude/rewrite-cljc-playground"
-                               :sha "a60f2d3b172c6a8f1c25875f2af6c964b3f5fcc0"}
+        rewrite-clj/rewrite-clj {:mvn/version "1.0.572-alpha"}
         expound/expound {:mvn/version "0.8.6"}}
  :aliases {:kaocha {:extra-paths ["test"]
                     :extra-deps {org.clojure/test.check {:mvn/version "0.10.0"}
