@@ -142,28 +142,33 @@
 (defn carve!
   "Removes unused vars from file."
   [file vs {:keys [:out-dir :silent] :as opts}]
-  (let [zloc (z/of-file file)
-        locs->syms (->> vs
-                        (map (fn [{:keys [:row :col :ns :name]}]
-                               [[row col]
-                                (when (and ns name) ;; otherwise, nil sym
-                                  (symbol (str ns) (str name)))]))
-                        (into {}))
-        locs (keys locs->syms)
-        locs (sort locs)
-        _ (when (and (not silent) (seq locs))
-            (println "Carving" file)
-            (println))
-        {:keys [:made-changes? :zloc]}
-        (remove-locs file zloc locs locs->syms opts)]
-    (when made-changes?
-      (let [file (io/file file)
-            file (if (.isAbsolute file) file
-                     (io/file out-dir file))]
-        (io/make-parents file)
-        (when-not silent (println "Writing result to" (.getCanonicalPath file)))
-        (with-open [w (io/writer file)]
-          (z/print-root zloc w))))))
+  (try
+    (let [zloc (z/of-file file)
+          locs->syms (->> vs
+                          (map (fn [{:keys [:row :col :ns :name]}]
+                                 [[row col]
+                                  (when (and ns name) ;; otherwise, nil sym
+                                    (symbol (str ns) (str name)))]))
+                          (into {}))
+          locs (keys locs->syms)
+          locs (sort locs)
+          _ (when (and (not silent) (seq locs))
+              (println "Carving" file)
+              (println))
+          {:keys [:made-changes? :zloc]}
+          (remove-locs file zloc locs locs->syms opts)]
+      (when made-changes?
+        (let [file (io/file file)
+              file (if (.isAbsolute file) file
+                       (io/file out-dir file))]
+          (io/make-parents file)
+          (when-not silent (println "Writing result to" (.getCanonicalPath file)))
+          (with-open [w (io/writer file)]
+            (z/print-root zloc w)))))
+    (catch Exception e
+      (when-not silent
+        (println (str"Exception thrown when analyzing " file "."))
+        (println e)))))
 
 (defn ignore? [api-namespaces {:keys [:ns :export :defined-by :test :private :name]}]
   (or
