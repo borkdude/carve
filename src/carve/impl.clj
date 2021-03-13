@@ -127,7 +127,8 @@
               (println "------------------"))
             (let [remove? (cond dry-run false
                                 interactive
-                                (= "Y" (interact opts sym))
+                                (or (= "Y" (interact opts sym))
+                                    (= "y" (interact opts sym)))
                                 :else   true)
                   zloc    (if remove? (z/remove zloc) (z/next zloc))]
               (recur zloc (next locs) (or remove? made-changes?))))
