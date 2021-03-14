@@ -176,3 +176,38 @@ test-resources/app/app.clj:11:1 app/->unused-arrow-fn
     (is (= {:paths ["src"]}
            (#'main/load-opts {:paths ["src" "test"]}
                              "{:paths [\"src\"]}")))))
+
+(deftest carve-at-end-of-input
+  ;; Spit test files instead of pre-creating them under test-resources to avoid chance of
+  ;; some editors accidentally stripping trailing newlines on save.
+  ;; Spitting under target instead of system temp dir because carve has certain expectations
+  ;; on relative paths.
+  (let [rel-dir "target/carve-test/carve-at-end-of-input"
+        base-expected (str "(ns some.ns.here)\n"
+                           "\n"
+                           "(deftest a-test\n"
+                           "  (testing \"FIXME, I fail.\")\n"
+                           "    (is (= 0 1)))")
+        base-input (str base-expected "\n"
+                        "\n"
+                        "(defn i-will-be-carved[])")]
+    (.mkdirs (io/file rel-dir))
+    (testing "when no trailing newline, no newline should appear at end of input"
+      (let [src-file (str (io/file rel-dir "eoi_no_trailing.clj"))]
+        (spit src-file base-input)
+        (run-main {:paths [src-file] :interactive? false})
+        (is (= base-expected (slurp src-file)))))
+    (testing "when one trailing newline, one newline should be preserved at end of input"
+      (let [src-file (str (io/file rel-dir "eoi_one_trailing.clj"))
+            input (str base-input "\n")
+            expected (str base-expected "\n")]
+        (spit src-file input)
+        (run-main {:paths [src-file] :interactive? false})
+        (is (= expected (slurp src-file)))))
+    (testing "when trailing newlines, one newline should be preserved at end of input"
+      (let [src-file (str (io/file rel-dir "eoi_many_trailing.clj"))
+            input (str base-input "\n\n\n\n")
+            expected (str base-expected "\n")]
+        (spit src-file input)
+        (run-main {:paths [src-file] :interactive? false})
+        (is (= expected (slurp src-file)))))))
