@@ -167,8 +167,9 @@
             (z/print-root zloc w)))))
     (catch Exception e
       (when-not silent
-        (println (str "Exception thrown when analyzing " file "."))
-        (println e)))))
+        (binding [*out* *err*]
+          (println (str "Exception thrown when analyzing " file "."))
+          (println e))))))
 
 (defn ignore? [api-namespaces {:keys [:ns :export :defined-by :test :private :name]}]
   (or
