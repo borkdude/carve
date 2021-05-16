@@ -3,3 +3,5 @@
 .dir-locals.el
 /carve
 /carve.jar
+/pom.xml
+/.lein-failures
