@@ -27,7 +27,7 @@
     (is (= (slurp uberscript-carved-expected)
            (slurp uberscript-carved)))))
 
-(deftest lint-data-test
+(deftest run!-test
   (let [uberscript (.getPath (io/file "test-resources" "uberscript" "uberscript.clj"))
         expected '[{:filename "test-resources/uberscript/uberscript.clj",
                     :row      6,
@@ -220,10 +220,10 @@
                     :ns       medley.core,
                     :name     random-uuid}]]
     (is (= expected
-           (main/lint-data {:paths [uberscript]}))
+           (main/run! {:paths [uberscript]}))
         "Returns (by default) lint data as a vanilla data structure")
     (is (= ""
-           (with-out-str (main/lint-data {:paths [uberscript]})))
+           (with-out-str (main/run! {:paths [uberscript]})))
         "Prints nothing during operation")))
 
 (deftest issue-11-test

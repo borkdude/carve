@@ -1,4 +1,5 @@
 (ns carve.main
+  (:refer-clojure :exclude [run!])
   (:require
    [carve.impl :as impl]
    [clojure.edn :as edn]
@@ -61,23 +62,21 @@
     (validate-opts! opts)
     opts))
 
-(defn lint-data
+(defn run!
   "Programmatic API especially apt for being invoked within an existing, vanilla JVM.
 
-  The defaults are data-oriented and side-effect-free.
+  The defaults are data-oriented and (generally) side-effect-free.
 
   Any existing .carve/config.edn file will be ignored - this way consumers have the flexibility/transparency
   to `slurp` (or ignore, merge, etc) those contents themselves."
-  [{:keys [dry-run dry-run? interactive interactive? silent] :as opts}]
-  (let [no-dry-opt-supplied? (every? nil? [dry-run dry-run?])
-        no-interactive-opt-supplied? (every? nil? [interactive interactive?])
-        format-path          [:report :format]
-        opts                 (cond-> opts
-                               no-dry-opt-supplied?                      (assoc :dry-run true)
-                               no-interactive-opt-supplied?              (assoc :interactive false)
-                               (nil? silent)                             (assoc :silent true)
-                               (= ::not-found
-                                  (get-in opts format-path ::not-found)) (assoc-in format-path :edn))]
+  [{:keys [dry-run interactive silent] :as opts}]
+  (let [format-path [:report :format]
+        opts (cond-> opts
+               (nil? dry-run)                            (assoc :dry-run true)
+               (nil? interactive)                        (assoc :interactive false)
+               (nil? silent)                             (assoc :silent true)
+               (= ::not-found
+                  (get-in opts format-path ::not-found)) (assoc-in format-path :edn))]
     (validate-opts! opts)
     (impl/run! opts)))
 

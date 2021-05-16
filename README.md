@@ -181,7 +181,7 @@ If the `report` step finds any dead code it exits with status code `1`, thus fai
 
 ### API
 
-If you wish to invoke Carve as a vanilla function from an arbitrary Clojure program, then `carve.main/lint-data` is offered as an API with defaults especially suitable for that purpose.
+If you wish to invoke Carve as a vanilla function from an arbitrary Clojure program, then `carve.main/run!` is offered as an API with defaults especially suitable for that purpose.
 
 ### Emacs
 
