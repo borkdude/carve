@@ -62,15 +62,23 @@
     (validate-opts! opts)
     opts))
 
+(defn- slurp-config []
+  (let [config-file (io/file ".carve/config.edn")]
+    (when (.exists config-file)
+      (edn/read-string (slurp config-file)))))
+
 (defn run!
   "Programmatic API especially apt for being invoked within an existing, vanilla JVM.
 
-  The defaults are data-oriented and (generally) side-effect-free.
+  The defaults are data-oriented and (generally) favor a side-effect-free funcionality.
 
-  Any existing .carve/config.edn file will be ignored - this way consumers have the flexibility/transparency
-  to `slurp` (or ignore, merge, etc) those contents themselves."
-  [{:keys [dry-run interactive silent] :as opts}]
-  (let [format-path [:report :format]
+  If you pass `opts` as map (empty or not), it will be used as the basis for configuration.
+  If you pass `nil` instead, a .carve/config.edn will be read and parsed, if it exists.
+
+  In both cases, the mentioned defaults will be assoc'ed for absent keys."
+  [maybe-opts]
+  (let [{:keys [dry-run interactive silent] :as opts} (or maybe-opts (slurp-config))
+        format-path [:report :format]
         opts (cond-> opts
                (nil? dry-run)                            (assoc :dry-run true)
                (nil? interactive)                        (assoc :interactive false)
@@ -82,9 +90,7 @@
 
 (defn main
   [& [flag opts & _args]]
-  (let [config-file (io/file ".carve/config.edn")
-        config (when (.exists config-file)
-                 (edn/read-string (slurp config-file)))]
+  (let [config (slurp-config)]
     (if (and (not flag) (not config))
       (binding [*err* *out*]
         (println "No config found in .carve/config.edn.\nSee https://github.com/borkdude/carve#usage on how to use carve.")
