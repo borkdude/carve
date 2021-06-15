@@ -17,9 +17,9 @@
       (do (when (and (not (= "--opts" flag)) (not config))
             (throw (ex-info (str "Unrecognized option: " flag) {:flag flag})))
           (let [opts (edn/read-string opts)
-                report (impl/run! opts)
-                format (-> opts :report :format)]
-            (when format
+                {:keys [:report :config]} (impl/run+ opts)
+                format (-> config :report :format)]
+            (when (:report config)
               (impl/print-report report format))
             (if (empty? report) 0 1))))))
 

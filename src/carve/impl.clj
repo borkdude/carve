@@ -329,12 +329,18 @@
     (validate-opts! opts)
     opts))
 
-(defn run!
-  ([] (run! nil))
+(defn run+
+  ([] (run+ nil))
   ([opts]
    (let [config-file (io/file ".carve/config.edn")
          config (when (.exists config-file)
                   (edn/read-string (slurp config-file)))
          opts (load-opts config opts)
          report (do-run! opts)]
-     report)))
+     {:report report
+      :config opts})))
+
+(defn run!
+  ([] (run! nil))
+  ([opts]
+   (:report (run+ opts))))
