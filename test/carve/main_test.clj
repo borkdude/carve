@@ -1,5 +1,6 @@
 (ns carve.main-test
   (:require
+   [carve.impl :as impl]
    [carve.main :as main]
    [clojure.java.io :as io]
    [clojure.spec.alpha :as s]
@@ -116,9 +117,9 @@ test-resources/app/app.clj:11:1 app/->unused-arrow-fn
                  (run-main "{:paths [src test]}"))))
 
   (testing "Generate random options validate"
-    (doseq [o (g/sample (s/gen ::main/opts))]
+    (doseq [o (g/sample (s/gen ::impl/opts))]
       ;; the paths needs to exist to to simplify the test we just hard code it
-      (is (nil? (main/validate-opts! (assoc o :paths ["."]))))))
+      (is (nil? (impl/validate-opts! (assoc o :paths ["."]))))))
 
   (testing "Passing a non existing directory fails to validate"
     (is (thrown-with-msg?
@@ -174,8 +175,8 @@ test-resources/app/app.clj:11:1 app/->unused-arrow-fn
 (deftest load-config-test
   (testing "passing arguments from the cli overrides the configuration"
     (is (= {:paths ["src"]}
-           (#'main/load-opts {:paths ["src" "test"]}
-                             "{:paths [\"src\"]}")))))
+           (impl/load-opts {:paths ["src" "test"]}
+                           {:paths ["src"]})))))
 
 (deftest carve-at-end-of-input
   ;; Spit test files instead of pre-creating them under test-resources to avoid chance of
