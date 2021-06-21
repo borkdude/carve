@@ -6,7 +6,9 @@
    [clojure.edn :as edn]
    [clojure.java.io :as io]
    [clojure.set :as set]
+   [clojure.spec.alpha :as s]
    [clojure.string :as str]
+   [expound.alpha :as expound]
    [rewrite-clj.node :as node]
    [rewrite-clj.zip :as z]))
 
@@ -213,7 +215,7 @@
 (defn make-absolute-paths [dir paths]
   (mapv #(.getPath (io/file dir %)) paths))
 
-(defn run! [opts]
+(defn do-run! [opts]
   (let [{:keys [:carve-ignore-file
                 :ignore-vars
                 :paths
@@ -271,3 +273,74 @@
                          (dissoc analysis :unused-var-refers)))
                 (reportize results)))
           (reportize results))))))
+
+(set! *warn-on-reflection* true)
+(s/check-asserts true)
+
+(s/def ::paths (s/coll-of string?))
+(s/def ::ignore-vars (s/coll-of symbol?))
+(s/def ::api-namespaces (s/coll-of symbol?))
+(s/def ::carve-ignore-file string?)
+(s/def ::interactive boolean?)
+(s/def ::interactive? boolean?) ;; deprecated
+(s/def ::dry-run boolean?)
+(s/def ::dry-run? boolean?) ;; deprecated
+(s/def ::format #{:edn :text :ignore})
+(s/def ::aggressive boolean?)
+(s/def ::aggressive? boolean?) ;; deprecated
+(s/def ::out-dir string?)
+(s/def ::report-format (s/keys :req-un [::format]))
+(s/def ::report (s/or :bool boolean? :map ::report-format))
+(s/def ::silent boolean?)
+
+(s/def ::opts (s/keys :req-un [::paths]
+                      :opt-un [::ignore-vars
+                               ::api-namespaces
+                               ::carve-ignore-file
+                               ::interactive
+                               ::interactive?
+                               ::out-dir
+                               ::dry-run
+                               ::dry-run?
+                               ::aggressive
+                               ::aggressive?
+                               ::report
+                               ::silent]))
+
+(defn- valid-path?
+  [p]
+  (.exists (io/file p)))
+
+(defn validate-opts!
+  "Validate options throwing an exception if they don't validate"
+  [{:keys [paths] :as opts}]
+  (binding [s/*explain-out* expound/printer]
+    (s/assert ::opts opts))
+  (when-not (every? valid-path? paths)
+    (throw (ex-info "Path not found" {:paths paths}))))
+
+(defn load-opts
+  "Load options, giving higher precedence to options passed from the CLI"
+  [config opts]
+  (let [opts (if (:merge-config opts)
+               (if config (merge config opts)
+                   opts)
+               (or opts config))]
+    (validate-opts! opts)
+    opts))
+
+(defn run+
+  ([] (run+ nil))
+  ([opts]
+   (let [config-file (io/file ".carve/config.edn")
+         config (when (.exists config-file)
+                  (edn/read-string (slurp config-file)))
+         opts (load-opts config opts)
+         report (do-run! opts)]
+     {:report report
+      :config opts})))
+
+(defn run!
+  ([] (run! nil))
+  ([opts]
+   (:report (run+ opts))))
