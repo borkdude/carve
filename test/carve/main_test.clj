@@ -25,8 +25,10 @@
                :aggressive? true
                :interactive? false
                :out-dir tmp-dir})
-    (is (= (slurp uberscript-carved-expected)
-           (slurp uberscript-carved)))))
+    (is (= (doto (slurp uberscript-carved-expected)
+             println)
+           (doto (slurp uberscript-carved)
+             println)))))
 
 (deftest issue-11-test
   (let [tmp-dir (System/getProperty "java.io.tmpdir")]
@@ -89,6 +91,7 @@
   (is (=
         (-> (str/trim "
 test-resources/app/api.clj:3:1 api/private-lib-function
+test-resources/app/app.clj:1:43 clojure.string/
 test-resources/app/app.clj:4:1 app/unused-function
 test-resources/app/app.clj:5:1 app/another-unused-function
 test-resources/app/app.clj:9:1 app/ignore-me

@@ -244,7 +244,7 @@
             ;; clj-kondo since we already removed some of the functions, not all
             ;; usage may be relevant anymore
             var-usages (remove (fn [usage]
-                                (let [from-var (:from-var usage)
+                                 (let [from-var (:from-var usage)
                                       from-ns (:from usage)]
                                   (and from-var from-ns
                                        (contains? removed [from-ns from-var]))))
@@ -256,8 +256,9 @@
             unused-vars-data (remove #(ignore? api-namespaces %) unused-vars-data)
             ;; update unused-vars with ignored ones (deftest, etc)
             unused-vars (set (map (juxt :ns :name) unused-vars-data))
-            results (into results unused-vars-data)]
-        (if (or (seq unused-vars-data) (seq unused-var-refers))
+            results (reduce into results [unused-vars-data unused-var-refers])]
+        (if (or (seq unused-vars-data)
+                (seq unused-var-refers))
           (do (when-not (:report opts)
                 (let [data-by-file (->> unused-vars-data
                                         (concat unused-var-refers)
