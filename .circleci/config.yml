@@ -38,7 +38,7 @@ jobs:
           key: v1-dependencies-{{ checksum "deps.edn" }}
   linux:
     docker:
-      - image: circleci/clojure:lein-2.9.6-bulleye
+      - image: circleci/clojure:openjdk-17-lein-2.9.7-bullseye
     working_directory: ~/repo
     environment:
       LEIN_ROOT: "true"
