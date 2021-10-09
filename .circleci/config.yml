@@ -38,7 +38,7 @@ jobs:
           key: v1-dependencies-{{ checksum "deps.edn" }}
   linux:
     docker:
-      - image: circleci/clojure:lein-2.9.3-buster
+      - image: circleci/clojure:lein-2.9.6-bulleye
     working_directory: ~/repo
     environment:
       LEIN_ROOT: "true"
@@ -64,7 +64,7 @@ jobs:
           name: Install native dev tools
           command: |
             sudo apt-get update
-            sudo apt-get -y install gcc g++
+            sudo apt-get -y install gcc g++ zlib1g-dev
       - run:
           name: Download GraalVM
           command: |
