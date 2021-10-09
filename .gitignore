@@ -5,3 +5,5 @@
 /carve.jar
 /pom.xml
 /.lein-failures
+/.lsp/.cache
+/.clj-kondo/.cache
