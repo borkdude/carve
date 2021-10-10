@@ -180,10 +180,14 @@
     (when (contains? api-namespaces ns)
       (not private))
     (= (str name) "-main")
-    (= 'clojure.core/deftype defined-by)
-    (= 'clojure.core/defrecord defined-by)
-    (= 'clojure.core/defprotocol defined-by)
-    (= 'clojure.core/definterface defined-by)))
+    (let [ns (namespace defined-by)
+          nm (clojure.core/name defined-by)]
+      (and (or (= "clojure.core" ns)
+               (= "cljs.core" ns))
+           (or (= "deftype" nm)
+               (= "defrecord" nm)
+               (= "defprotocol" nm)
+               (= "definterface" nm))))))
 
 (defn reportize [results]
   (sort-by (juxt :filename :row :col)
