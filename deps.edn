@@ -1,4 +1,4 @@
-{:deps {clj-kondo/clj-kondo {:mvn/version "2021.06.01"}
+{:deps {clj-kondo/clj-kondo {:mvn/version "2021.09.26-20211013.125030-9"}
         rewrite-clj/rewrite-clj {:mvn/version "1.0.572-alpha"}
         expound/expound {:mvn/version "0.8.6"}}
  :aliases {:kaocha {:extra-paths ["test"]
