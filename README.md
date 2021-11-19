@@ -52,9 +52,20 @@ where the latest SHA can be found with:
 $ git ls-remote https://github.com/borkdude/carve.git refs/heads/master
 ```
 
+#### Clojure tool
+
+To use as a [clojure tool](https://clojure.org/reference/deps_and_cli#tool_install):
+
+``` shell
+$ clj -Ttools install io.github.borkdude/carve '{:git/tag "v0.1.0"}' :as carve
+```
+
 ## How does it work?
 
-Carve invokes [clj-kondo](https://github.com/borkdude/clj-kondo) and uses the [analysis](https://github.com/borkdude/clj-kondo/tree/master/analysis) information to check which vars are unused. To remove the relevant bits of code it uses [rewrite-cljc](https://github.com/lread/rewrite-cljc-playground).
+Carve invokes [clj-kondo](https://github.com/borkdude/clj-kondo) and uses the
+[analysis](https://github.com/borkdude/clj-kondo/tree/master/analysis)
+information to check which vars are unused. To remove the relevant bits of code
+it uses [rewrite-cljc](https://github.com/lread/rewrite-cljc-playground).
 
 ## Usage
 
@@ -71,6 +82,12 @@ clojure -M:carve --opts '{:paths ["src" "test"]}'
 ```
 
 on the JVM.
+
+As a [clojure tool](https://clojure.org/reference/deps_and_cli#_tool_usage):
+
+``` clojure
+$ clj -Tcarve carve! '{:paths ["src"] :report {:format :text}}'
+```
 
 You can also store the config for your project in `.carve/config.edn`. When
 invoking carve with no options, the options in `.carve/config.edn` will be used.
