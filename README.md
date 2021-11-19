@@ -23,9 +23,9 @@ Carve will search through your code for unused vars and will remove them.
 
     yay -S carve-bin
 
-<!-- #### Scoop (Windows) -->
+#### Scoop (Windows)
 
-<!-- See [scoop-clojure](https://github.com/littleli/scoop-clojure). -->
+See [scoop-clojure](https://github.com/littleli/scoop-clojure).
 
 ### Manual
 
