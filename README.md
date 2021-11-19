@@ -8,10 +8,6 @@ Carve out the essentials of your Clojure app.
 
 Carve will search through your code for unused vars and will remove them.
 
-## Status
-
-Experimental. Use with caution! Breaking changes may happen. Feedback and bugfix PRs welcome.
-
 ## Installation
 
 ### CLI
