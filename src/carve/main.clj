@@ -9,7 +9,7 @@
   (when (not (= "--opts" flag))
     (throw (ex-info (str "Unrecognized option: " flag) {:flag flag})))
   (let [opts (if opts (edn/read-string opts) nil)]
-    (api/carve! opts)))
+    (:exit-code (api/carve! opts))))
 
 (defn -main
   [& options]

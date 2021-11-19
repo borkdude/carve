@@ -32,9 +32,9 @@
     (if (and (empty? opts) (not config))
       (binding [*err* *out*]
         (println "No config found in .carve/config.edn.\nSee https://github.com/borkdude/carve#usage on how to use carve.")
-        1)
+        {:exit-code 1})
       (let [{:keys [:report :config]} (impl/run+ opts)
             format (-> config :report :format)]
         (when (:report config)
           (impl/print-report report format))
-        (if (empty? report) 0 1)))))
+        {:exit-code (if (empty? report) 0 1)}))))
