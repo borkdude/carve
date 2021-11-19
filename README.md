@@ -31,7 +31,6 @@ See [scoop-clojure](https://github.com/littleli/scoop-clojure).
 
 Grab the binary for your OS at [Github releases](https://github.com/borkdude/carve/releases).
 
-
 ### JVM
 
 Add to your `deps.edn` under the `:aliases` key:
@@ -55,6 +54,11 @@ To use as a [clojure tool](https://clojure.org/reference/deps_and_cli#tool_insta
 ``` shell
 $ clj -Ttools install io.github.borkdude/carve '{:git/tag "v0.1.0"}' :as carve
 ```
+
+### Babashka
+
+Download the `carve.clj` script from the root of this repository and place it on
+your path. Invoke it in the same way as the CLI binary.
 
 ## How does it work?
 
