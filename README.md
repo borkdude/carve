@@ -52,7 +52,7 @@ $ git ls-remote https://github.com/borkdude/carve.git refs/heads/master
 To use as a [clojure tool](https://clojure.org/reference/deps_and_cli#tool_install):
 
 ``` shell
-$ clj -Ttools install io.github.borkdude/carve '{:git/tag "v0.1.0"}' :as carve
+$ clj -Ttools install io.github.borkdude/carve '{:git/tag "v0.2.0"}' :as carve
 ```
 
 ### Babashka
@@ -233,6 +233,6 @@ or alter the command used by `cider-jack-in` by prefixing the invocation with
 
 ## License
 
-Copyright © 2019-2021 Michiel Borkent
+Copyright © 2019-2022 Michiel Borkent
 
 Distributed under the EPL License. See LICENSE.
