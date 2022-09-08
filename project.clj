@@ -1,4 +1,4 @@
-(defproject com.github.borkdude/carve "0.2.0"
+(defproject io.github.borkdude/carve "0.2.0"
   :description "Carve"
   :url "https://github.com/borkdude/carve"
   :scm {:name "git"
