@@ -1,5 +1,6 @@
 # Carve
 
+[![Clojars Project](https://img.shields.io/clojars/v/io.github.borkdude/carve.svg)](https://clojars.org/io.github.borkdude/carve)
 [![CircleCI](https://circleci.com/gh/borkdude/carve/tree/master.svg?style=shield)](https://circleci.com/gh/borkdude/carve/tree/master)
 
 Carve out the essentials of your Clojure app.
