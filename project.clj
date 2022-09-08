@@ -1,4 +1,4 @@
-(defproject com.github.borkdude/carve "0.0.1-SNAPSHOT"
+(defproject com.github.borkdude/carve "0.2.0"
   :description "Carve"
   :url "https://github.com/borkdude/carve"
   :scm {:name "git"
@@ -6,7 +6,7 @@
   :license {:name "EPL-1.0"
             :url  "https://www.eclipse.org/legal/epl-1.0/"}
   :dependencies [[org.clojure/clojure "1.9.0"]
-                 [clj-kondo/clj-kondo "2021.09.26-20211013.125030-9"]
+                 [clj-kondo/clj-kondo "2022.09.08"]
                  [rewrite-clj/rewrite-clj "1.0.572-alpha"]
                  [expound/expound "0.8.6"]]
   :profiles {:test {:dependencies [[org.clojure/test.check "0.10.0"]]}}
