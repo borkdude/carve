@@ -6,7 +6,7 @@
 
 (defn main
   [& [flag opts & _args]]
-  (when (not (= "--opts" flag))
+  (when (and (some? flag) (not (= "--opts" flag)))
     (throw (ex-info (str "Unrecognized option: " flag) {:flag flag})))
   (let [opts (if opts (edn/read-string opts) nil)]
     (:exit-code (api/carve! opts))))
