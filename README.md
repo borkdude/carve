@@ -199,6 +199,12 @@ If the `report` step finds any dead code it exits with status code `1`, thus fai
 
 ### Emacs
 
+#### carve.el
+
+A simple emacs integration is provided by [carve.el](https://github.com/oliyh/carve.el).
+
+It lets you run carve with a simple key binding and opens a result buffer where you can navigate to the results and add them to your ignore file with a single keystroke.
+
 #### Report mode
 
 Running carve with in report mode (for example `clojure -M:carve --opts '{:paths
