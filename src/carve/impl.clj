@@ -1,5 +1,6 @@
 (ns carve.impl
-  {:no-doc true}
+  {:no-doc true
+   :clj-kondo/config '{:linters {:unresolved-namespace {:exclude [clj-kondo]}}}}
   (:refer-clojure :exclude [run!])
   (:require
    [clojure.edn :as edn]
@@ -18,7 +19,7 @@
 (if-bb
     (do ((requiring-resolve 'babashka.pods/load-pod) 'clj-kondo/clj-kondo "2023.01.20")
         (require '[pod.borkdude.clj-kondo :as clj-kondo]))
-  (require '[clj-kondo.core]))
+  (require '[clj-kondo.core :as clj-kondo]))
 
 (defn index-by
   [f coll]
