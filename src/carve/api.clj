@@ -25,8 +25,24 @@
 (defn carve!
   "Similar as main function but with opts already parsed. Use nil opts for passing no opts.
   Intended to be used with clojure -T or clojure -X."
+  {:org.babashka/cli
+   {:coerce
+    {:paths []
+     :ignore-vars [:symbol]
+     :api-namespaces [:symbol]
+     :carve-ignore-file :string
+     :interactive :boolean
+     :dry-run :boolean
+     :format :keyword
+     :aggressive :boolean
+     :out-dir :string
+     :report-format :keyword
+     :report :boolean
+     :silent :boolean
+     :opts :edn}}}
   [opts]
-  (let [config-file (io/file ".carve/config.edn")
+  (let [opts (or (:opts opts) opts)
+        config-file (io/file ".carve/config.edn")
         config (when (.exists config-file)
                  (edn/read-string (slurp config-file)))]
     (if (and (empty? opts) (not config))
@@ -34,7 +50,8 @@
         (println "No config found in .carve/config.edn.\nSee https://github.com/borkdude/carve#usage on how to use carve.")
         {:exit-code 1})
       (let [{:keys [:report :config]} (impl/run+ opts)
-            format (-> config :report :format)]
+            format (or (:report-format opts)
+                       (-> config :report :format))]
         (when (:report config)
           (impl/print-report report format))
         {:exit-code (if (empty? report) 0 1)}))))
