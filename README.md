@@ -2,6 +2,7 @@
 
 [![Clojars Project](https://img.shields.io/clojars/v/io.github.borkdude/carve.svg)](https://clojars.org/io.github.borkdude/carve)
 [![CircleCI](https://circleci.com/gh/borkdude/carve/tree/master.svg?style=shield)](https://circleci.com/gh/borkdude/carve/tree/master)
+[![bb compatible](https://raw.githubusercontent.com/babashka/babashka/master/logo/badge.svg)](https://babashka.org)
 
 Carve out the essentials of your Clojure app.
 
