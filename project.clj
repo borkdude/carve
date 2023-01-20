@@ -6,8 +6,8 @@
   :license {:name "EPL-1.0"
             :url  "https://www.eclipse.org/legal/epl-1.0/"}
   :dependencies [[org.clojure/clojure "1.9.0"]
-                 [clj-kondo/clj-kondo "2022.09.08"]
-                 [rewrite-clj/rewrite-clj "1.0.572-alpha"]
+                 [clj-kondo/clj-kondo "2023.01.20"]
+                 [rewrite-clj/rewrite-clj "1.1.45"]
                  [expound/expound "0.8.6"]]
   :profiles {:test {:dependencies [[org.clojure/test.check "0.10.0"]]}}
   :deploy-repositories [["clojars" {:url           "https://clojars.org/repo"

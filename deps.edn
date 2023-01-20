@@ -1,14 +1,14 @@
-{:deps {clj-kondo/clj-kondo {:mvn/version "2021.09.26-20211013.125030-9"}
-        rewrite-clj/rewrite-clj {:mvn/version "1.0.572-alpha"}
-        expound/expound {:mvn/version "0.8.6"}}
+{:deps {clj-kondo/clj-kondo {:mvn/version "2023.01.20"}
+        rewrite-clj/rewrite-clj {:mvn/version "1.1.45"}
+        expound/expound {:mvn/version "0.9.0"}}
  :tools/usage {:ns-default carve.api}
  :aliases {:kaocha {:extra-paths ["test"]
-                    :extra-deps {org.clojure/test.check {:mvn/version "0.10.0"}
-                                 lambdaisland/kaocha {:mvn/version "0.0-590"}
-                                 lambdaisland/kaocha-junit-xml {:mvn/version "0.0-70"}
-                                 lambdaisland/kaocha-cloverage {:mvn/version "0.0-41"}}}
+                    :extra-deps {org.clojure/test.check {:mvn/version "1.1.1"}
+                                 lambdaisland/kaocha {:mvn/version "1.75.1190"}
+                                 lambdaisland/kaocha-junit-xml {:mvn/version "1.17.101"}
+                                 lambdaisland/kaocha-cloverage {:mvn/version "1.1.89"}}}
            :test {:extra-paths ["test"]
-                  :extra-deps {org.clojure/test.check {:mvn/version "0.10.0"}
+                  :extra-deps {org.clojure/test.check {:mvn/version "1.1.1"}
                                com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
                                                           :sha "209b64504cb3bd3b99ecfec7937b358a879f55c1"}}
                   :main-opts ["-m" "cognitect.test-runner"]}
@@ -21,4 +21,4 @@
                         :compile-ns [carve.main]
                         :aliases [:native]}}
            :native {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]
-                    :extra-deps {org.clojure/clojure {:mvn/version "1.10.2-rc1"}}}}}
+                    :extra-deps {org.clojure/clojure {:mvn/version "1.11.1"}}}}}
