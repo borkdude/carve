@@ -7,3 +7,4 @@
 /.lein-failures
 /.lsp/.cache
 /.clj-kondo/.cache
+carve.build_artifacts.txt
