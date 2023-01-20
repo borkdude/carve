@@ -2,7 +2,6 @@
   {:no-doc true}
   (:refer-clojure :exclude [run!])
   (:require
-   [clj-kondo.core :as clj-kondo]
    [clojure.edn :as edn]
    [clojure.java.io :as io]
    [clojure.set :as set]
@@ -11,6 +10,15 @@
    [expound.alpha :as expound]
    [rewrite-clj.node :as node]
    [rewrite-clj.zip :as z]))
+
+(defmacro if-bb [then else]
+  (if (System/getProperty "babashka.version")
+    then else))
+
+(if-bb
+    (do ((requiring-resolve 'babashka.pods/load-pod) 'clj-kondo/clj-kondo "2023.01.20")
+        (require '[pod.borkdude.clj-kondo :as clj-kondo]))
+  (require '[clj-kondo.core]))
 
 (defn index-by
   [f coll]
