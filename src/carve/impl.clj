@@ -8,7 +8,6 @@
    [clojure.set :as set]
    [clojure.spec.alpha :as s]
    [clojure.string :as str]
-   [expound.alpha :as expound]
    [rewrite-clj.node :as node]
    [rewrite-clj.zip :as z]))
 
@@ -329,8 +328,9 @@
 (defn validate-opts!
   "Validate options throwing an exception if they don't validate"
   [{:keys [paths] :as opts}]
-  (binding [s/*explain-out* expound/printer]
-    (s/assert ::opts opts))
+  (when-not (s/valid? ::opts opts)
+    (binding [s/*explain-out* (requiring-resolve 'expound.alpha/printer)]
+      (s/assert ::opts opts)))
   (when-not (every? valid-path? paths)
     (throw (ex-info "Path not found" {:paths paths}))))
 
