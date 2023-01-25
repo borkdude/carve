@@ -18,7 +18,7 @@
 (if-bb
     ;; this is a workaround for the case when core.bb comes after core.clj on the classpath
     ;; it should really be addressed in bb by searching the whole classpath for .bb files instead of .clj files
-    ;; unfortunately this comes with a startup penalty :(
+    ;; fixed with the version after bb 1.1.171, but it might be good to leave this in 6 months until after that release
     (load-string
      (slurp
       (io/resource "clj_kondo/core.bb")))
