@@ -12,35 +12,11 @@ Carve will search through your code for unused vars and will remove them.
 
 ## Installation
 
-### CLI
-
-#### Brew (linux and macOS)
-
-     brew install borkdude/brew/carve
-
-### Arch (Linux)
-
-`carve` is [available](https://aur.archlinux.org/packages/carve-bin/) in the [Arch User Repository](https://aur.archlinux.org). It can be installed using your favorite [AUR](https://aur.archlinux.org) helper such as
-[yay](https://github.com/Jguer/yay), [yaourt](https://github.com/archlinuxfr/yaourt), [apacman](https://github.com/oshazard/apacman) and [pacaur](https://github.com/rmarquis/pacaur). Here is an example using `yay`:
-
-    yay -S carve-bin
-
-#### Scoop (Windows)
-
-See [scoop-clojure](https://github.com/littleli/scoop-clojure).
-
-### Manual
-
-Grab the binary for your OS at [Github releases](https://github.com/borkdude/carve/releases).
-
-### JVM
-
-Add to your `deps.edn` under the `:aliases` key:
+Add to your `deps.edn` or `bb.edn`:
 
 ``` clojure
-:carve {:extra-deps {borkdude/carve {:git/url "https://github.com/borkdude/carve"
-                                     :sha "<SHA>"}}
-        :main-opts ["-m" "carve.main"]}
+io.github.borkdude/carve {:git/url "https://github.com/borkdude/carve"
+                          :git/sha "<SHA>"}
 ```
 
 where the latest SHA can be found with:
@@ -49,18 +25,13 @@ where the latest SHA can be found with:
 $ git ls-remote https://github.com/borkdude/carve.git refs/heads/master
 ```
 
-#### Clojure tool
+### Clojure tool
 
 To use as a [clojure tool](https://clojure.org/reference/deps_and_cli#tool_install):
 
 ``` shell
 $ clj -Ttools install io.github.borkdude/carve '{:git/tag "v0.2.0"}' :as carve
 ```
-
-### Babashka
-
-Download the `carve.clj` script from the root of this repository and place it on
-your path. Invoke it in the same way as the CLI binary.
 
 ## How does it work?
 
@@ -73,17 +44,21 @@ it uses [rewrite-cljc](https://github.com/lread/rewrite-cljc-playground).
 
 The usage for a typical Clojure app looks like:
 
+#### Babashka
+
 ``` shell
-carve --opts '{:paths ["src" "test"]}'
+bb -x carve.api/carve! --opts '{:paths ["src" "test"]}'
 ```
 
-for the CLI or:
+#### Clojure
 
 ```
 clojure -M:carve --opts '{:paths ["src" "test"]}'
 ```
 
 on the JVM.
+
+#### Clojure tool
 
 As a [clojure tool](https://clojure.org/reference/deps_and_cli#_tool_usage):
 
@@ -177,8 +152,7 @@ First add this configuration into a `.circleci/deps.edn` file:
 
 ```clojure
 {:aliases
- {:carve {:extra-deps {borkdude/carve {:git/url "https://github.com/borkdude/carve"
-                                       :sha "$LATEST_CARVE_SHA"}}
+ {:carve {:extra-deps {io.github.borkdude/carve {:git/sha "$LATEST_CARVE_SHA"}}
           :main-opts ["-m" "carve.main"]}}}
 ```
 
@@ -241,6 +215,6 @@ or alter the command used by `cider-jack-in` by prefixing the invocation with
 
 ## License
 
-Copyright © 2019-2022 Michiel Borkent
+Copyright © 2019-2023 Michiel Borkent
 
 Distributed under the EPL License. See LICENSE.

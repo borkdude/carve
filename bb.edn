@@ -1,0 +1,2 @@
+{:deps {io.github.borkdude/carve {:local/root "."}}
+ :bbin/bin {carve {:main-opts ["-m" "carve.api/-main"]}}}
