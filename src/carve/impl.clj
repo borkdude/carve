@@ -16,9 +16,15 @@
     then else))
 
 (if-bb
-    (do ((requiring-resolve 'babashka.pods/load-pod) 'clj-kondo/clj-kondo "2023.01.20")
-        (require '[pod.borkdude.clj-kondo :as clj-kondo]))
-  (require '[clj-kondo.core :as clj-kondo]))
+    ;; this is a workaround for the case when core.bb comes after core.clj on the classpath
+    ;; it should really be addressed in bb by searching the whole classpath for .bb files instead of .clj files
+    ;; unfortunately this comes with a startup penalty :(
+    (load-string
+     (slurp
+      (io/resource "clj_kondo/core.bb")))
+  nil)
+
+(require '[clj-kondo.core :as clj-kondo])
 
 (defn index-by
   [f coll]
@@ -75,10 +81,10 @@
 
 (defn interact [{:keys [:carve-ignore-file]} sym]
   (println
-    (if sym
-      (format "Type Y to remove or i to add %s to %s" sym carve-ignore-file)
-      ;; no sym means nothing valid to add to carve-ignore
-      "Type Y to remove."))
+   (if sym
+     (format "Type Y to remove or i to add %s to %s" sym carve-ignore-file)
+     ;; no sym means nothing valid to add to carve-ignore
+     "Type Y to remove."))
   (let [input (read-line)]
     (when (and (= "i" input) sym)
       (add-to-carve-ignore-file carve-ignore-file (str sym "\n")))
@@ -91,11 +97,11 @@
           start-line     (max (- matching-line 4) 0)
           end-line       (+ matching-line 6)
           [before after] (->>
-                           (str/split-lines content)
-                           (map-indexed list)
-                           (drop start-line)
-                           (take (- end-line start-line))
-                           (split-at (inc (- matching-line start-line))))
+                          (str/split-lines content)
+                          (map-indexed list)
+                          (drop start-line)
+                          (take (- end-line start-line))
+                          (split-at (inc (- matching-line start-line))))
           snippet-lines  (concat before
                                  [[nil (str (str/join "" (repeat (dec col) " "))
                                             (str "^--- unused var"))]]
@@ -183,20 +189,20 @@
 
 (defn ignore? [api-namespaces {:keys [:ns :export :defined-by :test :private :name]}]
   (or
-    test
-    export
-    (when (contains? api-namespaces ns)
-      (not private))
-    (= (str name) "-main")
-    (and defined-by
-         (let [ns (namespace defined-by)
-               nm (clojure.core/name defined-by)]
-           (and (or (= "clojure.core" ns)
-                    (= "cljs.core" ns))
-                (or (= "deftype" nm)
-                    (= "defrecord" nm)
-                    (= "defprotocol" nm)
-                    (= "definterface" nm)))))))
+   test
+   export
+   (when (contains? api-namespaces ns)
+     (not private))
+   (= (str name) "-main")
+   (and defined-by
+        (let [ns (namespace defined-by)
+              nm (clojure.core/name defined-by)]
+          (and (or (= "clojure.core" ns)
+                   (= "cljs.core" ns))
+               (or (= "deftype" nm)
+                   (= "defrecord" nm)
+                   (= "defprotocol" nm)
+                   (= "definterface" nm)))))))
 
 (defn reportize [results]
   (sort-by (juxt :filename :row :col)
@@ -215,8 +221,8 @@
 (defn analyze [opts paths]
   (let [{:keys [:clj-kondo/config]} opts
         result (clj-kondo/run!
-                 {:lint   paths
-                  :config (merge config {:output {:analysis true}})})
+                {:lint   paths
+                 :config (merge config {:output {:analysis true}})})
         unused-var-refers (->> result :findings
                                (filter #(= (:type %) :unused-referred-var)))
         {:keys [:var-definitions :var-usages]} (:analysis result)
@@ -258,9 +264,9 @@
             ;; usage may be relevant anymore
             var-usages (remove (fn [usage]
                                  (let [from-var (:from-var usage)
-                                      from-ns (:from usage)]
-                                  (and from-var from-ns
-                                       (contains? removed [from-ns from-var]))))
+                                       from-ns (:from usage)]
+                                   (and from-var from-ns
+                                        (contains? removed [from-ns from-var]))))
                                var-usages)
             used-vars (set (map (juxt :to :name) var-usages))
             used-vars (reduce into used-vars [ignore-from-config ignore])
