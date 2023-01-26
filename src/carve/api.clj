@@ -33,7 +33,7 @@
     :dry-run {:coerce :boolean :desc "Dry run "}
     :aggressive {:coerce :boolean :desc "Run carve multiple times to detect transitive unused vars"}
     :out-dir {:coerce :string :desc "Emit transformed code to out-dir instead of overwriting"}
-    :report-format {:coerce :keyword :desc "The report format: :text or :edn"}
+    :report-format {:coerce :keyword :desc "The report format: :text, :edn or :ignore"}
     :report {:coerce :boolean :desc "Set to true to report and not transform code"}
     :silent {:coerce :boolean :desc "When truthy, does not write to stdout. Implies :interactive false."}
     :opts {:coerce :edn :desc "The options as an EDN literal"}

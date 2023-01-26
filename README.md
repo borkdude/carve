@@ -57,14 +57,22 @@ The usage for a typical Clojure app looks like:
 
 #### Babashka
 
+To see help:
+
 ``` shell
-bb -x carve.api/carve! --opts '{:paths ["src" "test"]}'
+bb -x carve.api/carve! --help
+```
+
+To run with options:
+
+``` shell
+bb -x carve.api/carve! --paths src test
 ```
 
 #### Clojure
 
 ```
-clojure -M:carve --opts '{:paths ["src" "test"]}'
+clojure -M:carve --opts --paths src test
 ```
 
 on the JVM.
@@ -74,8 +82,12 @@ on the JVM.
 As a [clojure tool](https://clojure.org/reference/deps_and_cli#_tool_usage):
 
 ``` clojure
-$ clj -Tcarve carve! '{:paths ["src"] :report {:format :text}}'
+$ clj -Tcarve carve! '{:paths ["src"] :report true :report-format :text}'
 ```
+
+#### Options
+
+Run `carve --help` to see options.
 
 You can also store the config for your project in `.carve/config.edn`. When
 invoking carve with no options, the options in `.carve/config.edn` will be used.
@@ -109,7 +121,7 @@ required:
   override options set in the clj-kondo config file.
 
 ``` shell
-$ clojure -M:carve --opts '{:paths ["test-resources"] :dry-run true}'
+$ clojure -M:carve --paths "test-resources" --dry-run true
 Carving test-resources/app.clj
 
 Found unused var:
@@ -126,7 +138,7 @@ Found unused var:
 ```
 
 ``` shell
-$ clojure -M:carve --opts '{:paths ["test-resources"]}'
+$ clojure -M:carve --paths "test-resources"
 Carving test-resources/app.clj
 
 Found unused var:
@@ -145,7 +157,7 @@ $ cat .carve/ignore
 app/another-unused-function
 ```
 
-Keep in mind that if you ran `carve` with `'{:paths ["src" "test"]}'`, there might still be potentially lots of unused code, which wasn't detected simply because there are tests for it.
+Keep in mind that if you ran `carve` with `{:paths ["src" "test"]}`, there might still be potentially lots of unused code, which wasn't detected simply because there are tests for it.
 
 So after a first cycle of carving you might want to do another run with simply `{:paths ["src"]}`, which will help deleting the rest of the unused code.
 *Just beware that this will break all the tests using the code you just deleted, and you'll have to fix/delete them manually.**
@@ -193,16 +205,16 @@ It lets you run carve with a simple key binding and opens a result buffer where 
 
 #### Report mode
 
-Running carve with in report mode (for example `clojure -M:carve --opts '{:paths
-["src" "test"] :report {:format :text}}'`) you can make all the links clickable
+Running carve with in report mode (for example `clojure -M:carve --paths
+src test --report true --report-format :text}'`) you can make all the links clickable
 by switching to compilation-mode.
 
 <img src="assets/eshell.png">
 
-Using `:report {:format :ignore}` returns the list of unused vars in the same format as .carve/ignore so you can create the initial ignore file or append to an existing one.
+Using `:report-format :ignore` returns the list of unused vars in the same format as .carve/ignore so you can create the initial ignore file or append to an existing one.
 For example with:
 
-    carve --opts '{:paths ["src" "test"] :report {:format :ignore}}' > .carve/ignore
+    carve --paths "src" "test" --report true --report-format :ignore' > .carve/ignore
 
 ## Articles
 
