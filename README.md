@@ -41,7 +41,7 @@ See [bbin](https://github.com/babashka/bbin) for details.
 To use as a [clojure tool](https://clojure.org/reference/deps_and_cli#tool_install):
 
 ``` shell
-$ clj -Ttools install io.github.borkdude/carve '{:git/tag "v0.2.0"}' :as carve
+$ clj -Ttools install io.github.borkdude/carve '{:git/tag "v0.3.5"}' :as carve
 ```
 
 ## How does it work?

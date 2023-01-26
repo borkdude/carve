@@ -12,3 +12,5 @@
   ```
   bbin install io.github.borkdude/carve
   ```
+
+- Implement [babashka.cli](https://github.com/babashka/cli) integration
