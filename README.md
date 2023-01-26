@@ -30,7 +30,7 @@ $ git ls-remote https://github.com/borkdude/carve.git refs/heads/master
 You can install carve as a babashka script that you can invoke as `carve` with:
 
 
-``` elisp
+``` shell
 $ bbin install io.github.borkdude/carve
 ```
 
