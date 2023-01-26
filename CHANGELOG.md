@@ -1,5 +1,7 @@
 # Changelog
 
+[Carve](https://github.com/borkdude/carve): remove unused Clojure vars
+
 ## 0.3.5
 
 - Upgrade clj-kondo version
