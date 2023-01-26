@@ -2,6 +2,7 @@
   (:require
    [carve.impl :as impl]
    [carve.main :as main]
+   [carve.specs]
    [clojure.java.io :as io]
    [clojure.spec.alpha :as s]
    [clojure.spec.gen.alpha :as g]
@@ -115,12 +116,8 @@ test-resources/app/app.clj:11:1 app/->unused-arrow-fn
                                      :report {:format :text}}))))))
 
 (deftest options-validation-test
-  (testing "Forgetting to quote paths give an error"
-    (is (thrown? clojure.lang.ExceptionInfo
-                 (run-main "{:paths [src test]}"))))
-
   (testing "Generate random options validate"
-    (doseq [o (g/sample (s/gen ::impl/opts))]
+    (doseq [o (g/sample (s/gen :carve.specs/opts))]
       ;; the paths needs to exist to to simplify the test we just hard code it
       (is (nil? (impl/validate-opts! (assoc o :paths ["."]))))))
 

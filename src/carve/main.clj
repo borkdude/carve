@@ -1,14 +1,12 @@
 (ns carve.main
   (:require
    [carve.api :as api]
-   [clojure.edn :as edn])
+   [babashka.cli :as cli])
   (:gen-class))
 
 (defn main
-  [& [flag opts & _args]]
-  (when (and (some? flag) (not (= "--opts" flag)))
-    (throw (ex-info (str "Unrecognized option: " flag) {:flag flag})))
-  (let [opts (if opts (edn/read-string opts) nil)]
+  [& args]
+  (let [opts (cli/parse-opts args api/cli-opts)]
     (:exit-code (api/carve! opts))))
 
 (defn -main

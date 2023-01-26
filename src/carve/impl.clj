@@ -6,7 +6,6 @@
    [clojure.edn :as edn]
    [clojure.java.io :as io]
    [clojure.set :as set]
-   [clojure.spec.alpha :as s]
    [clojure.string :as str]
    [rewrite-clj.node :as node]
    [rewrite-clj.zip :as z]))
@@ -18,7 +17,7 @@
 (if-bb
     ;; this is a workaround for the case when core.bb comes after core.clj on the classpath
     ;; it should really be addressed in bb by searching the whole classpath for .bb files instead of .clj files
-    ;; fixed with the version after bb 1.1.171, but it might be good to leave this in 6 months until after that release
+    ;; fixed with the version after bb 1.1.171, but it might be good to leave this in 6 months until after that releas
     (load-string
      (slurp
       (io/resource "clj_kondo/core.bb")))
@@ -295,37 +294,6 @@
           (reportize results))))))
 
 (set! *warn-on-reflection* true)
-(s/check-asserts true)
-
-(s/def ::paths (s/coll-of string?))
-(s/def ::ignore-vars (s/coll-of symbol?))
-(s/def ::api-namespaces (s/coll-of symbol?))
-(s/def ::carve-ignore-file string?)
-(s/def ::interactive boolean?)
-(s/def ::interactive? boolean?) ;; deprecated
-(s/def ::dry-run boolean?)
-(s/def ::dry-run? boolean?) ;; deprecated
-(s/def ::format #{:edn :text :ignore})
-(s/def ::aggressive boolean?)
-(s/def ::aggressive? boolean?) ;; deprecated
-(s/def ::out-dir string?)
-(s/def ::report-format (s/keys :req-un [::format]))
-(s/def ::report (s/or :bool boolean? :map ::report-format))
-(s/def ::silent boolean?)
-
-(s/def ::opts (s/keys :req-un [::paths]
-                      :opt-un [::ignore-vars
-                               ::api-namespaces
-                               ::carve-ignore-file
-                               ::interactive
-                               ::interactive?
-                               ::out-dir
-                               ::dry-run
-                               ::dry-run?
-                               ::aggressive
-                               ::aggressive?
-                               ::report
-                               ::silent]))
 
 (defn- valid-path?
   [p]
@@ -333,10 +301,7 @@
 
 (defn validate-opts!
   "Validate options throwing an exception if they don't validate"
-  [{:keys [paths] :as opts}]
-  (when-not (s/valid? ::opts opts)
-    (binding [s/*explain-out* (requiring-resolve 'expound.alpha/printer)]
-      (s/assert ::opts opts)))
+  [{:keys [paths]}]
   (when-not (every? valid-path? paths)
     (throw (ex-info "Path not found" {:paths paths}))))
 

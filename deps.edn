@@ -2,7 +2,7 @@
  :deps {clj-kondo/clj-kondo {:mvn/version "2023.01.20"}
         io.github.clj-kondo/clj-kondo-bb {:git/tag "v2023.01.20" :git/sha "adfc7df"}
         rewrite-clj/rewrite-clj {:mvn/version "1.1.45"}
-        expound/expound {:mvn/version "0.9.0"}}
+        org.babashka/cli {:mvn/version "0.6.44"}}
  :tools/usage {:ns-default carve.api}
  :aliases {:kaocha {:extra-paths ["test"]
                     :extra-deps {org.clojure/test.check {:mvn/version "1.1.1"}
