@@ -16,3 +16,5 @@
   ```
 
 - Implement [babashka.cli](https://github.com/babashka/cli) integration
+
+- Implement `--help`
