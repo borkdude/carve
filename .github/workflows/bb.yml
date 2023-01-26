@@ -1,10 +1,10 @@
-name: Example workflow
+name: Test babashka
 
 on: [push]
 
 jobs:
 
-  clojure:
+  test-bb:
 
     strategy:
       matrix:
