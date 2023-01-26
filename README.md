@@ -72,7 +72,7 @@ bb -x carve.api/carve! --paths src test
 #### Clojure
 
 ```
-clojure -M:carve --opts --paths src test
+clojure -M:carve --paths src test
 ```
 
 on the JVM.
@@ -94,9 +94,7 @@ invoking carve with no options, the options in `.carve/config.edn` will be used.
 When providing options, the CLI options will take precedence over the configuration
 in`.carve/config.edn`.
 
-Currently `carve` only has one command line option, `--opts`, which expects an
-EDN map or EDN file with the following options of which only `:paths` is
-required:
+All options:
 
 - `:paths`: a list of paths to analyze. Can be a mix of individual files and directories.
 - `:ignore-vars`: a list of vars to ignore. Useful for when the analyzer has it wrong or you just want to keep the var for whatever reason.
