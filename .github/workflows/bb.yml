@@ -48,4 +48,4 @@ jobs:
           restore-keys: cljdeps-
 
       - name: Execute clojure code
-        run: bb -e '(+ 1 2 3)'
+        run: bb test:bb
