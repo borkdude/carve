@@ -25,6 +25,17 @@ where the latest SHA can be found with:
 $ git ls-remote https://github.com/borkdude/carve.git refs/heads/master
 ```
 
+### Babashka script
+
+You can install carve as a babashka script that you can invoke as `carve` with:
+
+
+``` elisp
+$ bbin install io.github.borkdude/carve
+```
+
+See [bbin](https://github.com/babashka/bbin) for details.
+
 ### Clojure tool
 
 To use as a [clojure tool](https://clojure.org/reference/deps_and_cli#tool_install):
