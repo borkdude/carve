@@ -1,4 +1,4 @@
-{:paths [".build"]
+{:paths [".bb"]
  :deps {io.github.borkdude/carve {:local/root "."}}
  :bbin/bin {carve {:main-opts ["-m" "carve.main/-main"]}}
  :tasks
