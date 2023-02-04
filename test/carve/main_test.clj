@@ -212,3 +212,26 @@ test-resources/app/app.clj:11:1 app/->unused-arrow-fn
         (spit src-file input)
         (run-main {:paths [src-file] :interactive? false})
         (is (= expected (slurp src-file)))))))
+
+(deftest delete-empty-files-test
+  (testing "when there are no vars to carve, file shouldn't be deleted"
+    (let [tmp-dir (System/getProperty "java.io.tmpdir")]
+      (run-main {:paths              [(.getPath (io/file "test-resources" "delete_empty_files" "no_vars_carved.clj"))]
+                 :interactive        false
+                 :delete-empty-files true
+                 :out-dir            tmp-dir})
+      (is (.exists (io/file tmp-dir "test-resources" "delete_empty_files" "no_vars_carved.clj")))))
+  (testing "when all vars are carved, file gets deleted"
+    (let [tmp-dir (System/getProperty "java.io.tmpdir")]
+      (run-main {:paths              [(.getPath (io/file "test-resources" "delete_empty_files" "all_vars_carved.clj"))]
+                 :interactive        false
+                 :delete-empty-files true
+                 :out-dir            tmp-dir})
+      (is (not (.exists (io/file tmp-dir "test-resources" "delete_empty_files" "all_vars_carved.clj"))))))
+  (testing "when all vars are carved and there is a comment form left, file gets deleted"
+    (let [tmp-dir (System/getProperty "java.io.tmpdir")]
+      (run-main {:paths              [(.getPath (io/file "test-resources" "delete_empty_files" "all_vars_carved+comment_form_left.clj"))]
+                 :interactive        false
+                 :delete-empty-files true
+                 :out-dir            tmp-dir})
+      (is (not (.exists (io/file tmp-dir "test-resources" "delete_empty_files" "all_vars_carved+comment_form_left.clj")))))))
