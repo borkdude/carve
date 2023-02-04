@@ -89,6 +89,12 @@ $ clj -Tcarve carve! '{:paths ["src"] :report true :report-format :text}'
 
 Run `carve --help` to see options.
 
+You may provide options as an EDN literal with `--opts`, e.g.:
+
+``` shell
+clojure -M:carve --opts '{:paths ["src" "test"] :report {:format :text}}'
+```
+
 You can also store the config for your project in `.carve/config.edn`. When
 invoking carve with no options, the options in `.carve/config.edn` will be used.
 When providing options, the CLI options will take precedence over the configuration
