@@ -195,7 +195,7 @@
   (let [node (z/node zloc)]
     (and (node/symbol-node? node) (= "ns" (node/string node)))))
 
-(defn rm-if-empty!
+(defn delete-if-empty!
   "Deletes a file if it is considered empty."
   [file {:keys [:out-dir :silent] :as _opts}]
   (try
@@ -212,7 +212,7 @@
     (catch Exception e
       (when-not silent
         (binding [*out* *err*]
-          (println (str "Exception thrown when analyzing and/or removing " file "."))
+          (println (str "Exception thrown when analyzing and/or deleting " file "."))
           (println e))))) )
 
 (defn ignore? [api-namespaces {:keys [:ns :export :defined-by :test :private :name]}]
@@ -270,8 +270,8 @@
                 :aggressive
                 :dry-run
                 :report
-                :rm-empty-namespaces
-                :out-dir] :as opts} (sanitize-opts opts)
+                :out-dir
+                :delete-empty-files] :as opts} (sanitize-opts opts)
         ignore (map (fn [ep]
                       [(symbol (namespace ep)) (symbol (name ep))])
                     ignore-vars)
@@ -314,8 +314,8 @@
                                         (group-by :filename))]
                   (doseq [[file vs] data-by-file]
                     (carve! file vs opts)
-                    (when rm-empty-namespaces
-                      (rm-if-empty! file opts)))))
+                    (when delete-empty-files
+                      (delete-if-empty! file opts)))))
               (if aggressive
                 (recur (into removed unused-vars)
                        results

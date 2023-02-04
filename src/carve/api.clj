@@ -28,12 +28,12 @@
    {:paths {:coerce [] :desc "A list of paths to analyze (files and dirs)"}
     :ignore-vars {:coerce [:symbol] :desc "A list of vars to ignore"}
     :api-namespaces {:coerce [:symbol] :desc "A list of namespaces to ignore"}
-    :rm-empty-namespaces {:coerce :boolean :desc "When truthy, also deletes files considered empty"}
     :carve-ignore-file {:coerce :string :desc "The file with ignored vars"}
     :interactive {:coerce :boolean :desc "Interactive mode: ask what to do with an unused var"}
     :dry-run {:coerce :boolean :desc "Dry run "}
     :aggressive {:coerce :boolean :desc "Run carve multiple times to detect transitive unused vars"}
     :out-dir {:coerce :string :desc "Emit transformed code to out-dir instead of overwriting"}
+    :delete-empty-files {:coerce :boolean :desc "When truthy, also deletes files considered empty"}
     :report-format {:coerce :keyword :desc "The report format: :text, :edn or :ignore"}
     :report {:coerce :boolean :desc "Set to true to report and not transform code"}
     :silent {:coerce :boolean :desc "When truthy, does not write to stdout. Implies :interactive false."}

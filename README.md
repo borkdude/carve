@@ -100,14 +100,14 @@ All options:
 - `:ignore-vars`: a list of vars to ignore. Useful for when the analyzer has it wrong or you just want to keep the var for whatever reason.
 - `:api-namespaces`: a list of namespaces of which only unused private vars will
   be reported.
-- `:rm-empty-namespaces`: when truthy, also deletes files considered empty, i.e.
-  those files in which there is no non-whitespace/non-comment content other than
-  the namespace declaration
 - `:carve-ignore-file`: a file where ignored vars can be stored, `.carve/ignore`
   by default.
 - `:interactive`: ask what to do with an unused var: remove from the file, add
   to `.carve/ignore` or continue. Set to `true` by default.
 - `:out-dir`: instead of writing back to the original file, write to this dir.
+- `:delete-empty-files`: when truthy, also deletes files considered empty,
+  i.e. those files that have no non-whitespace/non-comment content other than
+  namespace declaration. Only does this to files with carved vars.
 - `:dry-run`: just print the unused var expression.
 - `:aggressive`: runs multiple times until no unused vars are left. Defaults to `false`.
 - `:report`: when truthy, prints unused vars to stdout. Implies `:dry-run
