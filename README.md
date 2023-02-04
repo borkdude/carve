@@ -100,6 +100,9 @@ All options:
 - `:ignore-vars`: a list of vars to ignore. Useful for when the analyzer has it wrong or you just want to keep the var for whatever reason.
 - `:api-namespaces`: a list of namespaces of which only unused private vars will
   be reported.
+- `:rm-empty-namespaces`: when truthy, also deletes files considered empty, i.e.
+  those files in which there is no non-whitespace/non-comment content other than
+  the namespace declaration
 - `:carve-ignore-file`: a file where ignored vars can be stored, `.carve/ignore`
   by default.
 - `:interactive`: ask what to do with an unused var: remove from the file, add

@@ -28,6 +28,7 @@
    {:paths {:coerce [] :desc "A list of paths to analyze (files and dirs)"}
     :ignore-vars {:coerce [:symbol] :desc "A list of vars to ignore"}
     :api-namespaces {:coerce [:symbol] :desc "A list of namespaces to ignore"}
+    :rm-empty-namespaces {:coerce :boolean :desc "When truthy, also deletes files considered empty"}
     :carve-ignore-file {:coerce :string :desc "The file with ignored vars"}
     :interactive {:coerce :boolean :desc "Interactive mode: ask what to do with an unused var"}
     :dry-run {:coerce :boolean :desc "Dry run "}

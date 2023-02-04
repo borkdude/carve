@@ -4,6 +4,7 @@
 (s/def ::paths (s/coll-of string?))
 (s/def ::ignore-vars (s/coll-of symbol?))
 (s/def ::api-namespaces (s/coll-of symbol?))
+(s/def ::rm-empty-namespaces boolean?)
 (s/def ::carve-ignore-file string?)
 (s/def ::interactive boolean?)
 (s/def ::interactive? boolean?) ;; deprecated
@@ -20,6 +21,7 @@
 (s/def ::opts (s/keys :req-un [::paths]
                       :opt-un [::ignore-vars
                                ::api-namespaces
+                               ::rm-empty-namespaces
                                ::carve-ignore-file
                                ::interactive
                                ::interactive?

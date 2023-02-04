@@ -154,6 +154,13 @@
   (and (= from to)
        (= from-var name)))
 
+(defn- ->out-file
+  [p out-dir]
+  (let [file (io/file p)]
+    (if (.isAbsolute file)
+      file
+      (io/file out-dir file))))
+
 (defn carve!
   "Removes unused vars from file."
   [file vs {:keys [:out-dir :silent] :as opts}]
@@ -173,9 +180,7 @@
           {:keys [:made-changes? :zloc]}
           (remove-locs file zloc locs locs->syms opts)]
       (when made-changes?
-        (let [file (io/file file)
-              file (if (.isAbsolute file) file
-                       (io/file out-dir file))]
+        (let [file (->out-file file out-dir)]
           (io/make-parents file)
           (when-not silent (println "Writing result to" (.getCanonicalPath file)))
           (with-open [w (io/writer file)]
@@ -183,8 +188,32 @@
     (catch Exception e
       (when-not silent
         (binding [*out* *err*]
-          (println (str "Exception thrown when analyzing " file "."))
+          (println (str "Exception thrown when analyzing and/or carving " file "."))
           (println e))))))
+
+(defn- ns-declaration? [zloc]
+  (let [node (z/node zloc)]
+    (and (node/symbol-node? node) (= "ns" (node/string node)))))
+
+(defn rm-if-empty!
+  "Deletes a file if it is considered empty."
+  [file {:keys [:out-dir :silent] :as _opts}]
+  (try
+    (let [file (->out-file file out-dir)
+          zloc (z/of-file file)
+          ;; zloc of the first non-whitespace/non-comment child node or `nil`
+          zloc-c (z/down zloc)
+          empty? (and (some? zloc-c)
+                      (ns-declaration? zloc-c)
+                      (z/rightmost? zloc))]
+      (when empty?
+        (when-not silent (println "Deleting empty file" (.getCanonicalPath file)))
+        (io/delete-file file)))
+    (catch Exception e
+      (when-not silent
+        (binding [*out* *err*]
+          (println (str "Exception thrown when analyzing and/or removing " file "."))
+          (println e))))) )
 
 (defn ignore? [api-namespaces {:keys [:ns :export :defined-by :test :private :name]}]
   (or
@@ -240,6 +269,8 @@
                 :api-namespaces
                 :aggressive
                 :dry-run
+                :report
+                :rm-empty-namespaces
                 :out-dir] :as opts} (sanitize-opts opts)
         ignore (map (fn [ep]
                       [(symbol (namespace ep)) (symbol (name ep))])
@@ -277,12 +308,14 @@
             results (reduce into results [unused-vars-data unused-var-refers])]
         (if (or (seq unused-vars-data)
                 (seq unused-var-refers))
-          (do (when-not (:report opts)
+          (do (when-not report
                 (let [data-by-file (->> unused-vars-data
                                         (concat unused-var-refers)
                                         (group-by :filename))]
                   (doseq [[file vs] data-by-file]
-                    (carve! file vs opts))))
+                    (carve! file vs opts)
+                    (when rm-empty-namespaces
+                      (rm-if-empty! file opts)))))
               (if aggressive
                 (recur (into removed unused-vars)
                        results
