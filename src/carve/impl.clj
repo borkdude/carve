@@ -192,8 +192,14 @@
           (println e))))))
 
 (defn- ns-declaration? [zloc]
-  (let [node (z/node zloc)]
-    (and (node/symbol-node? node) (= "ns" (node/string node)))))
+  (when-some [zloc-c (z/down zloc)]
+    (let [node (z/node zloc-c)]
+      (and (node/symbol-node? node) (= "ns" (node/string node))))))
+
+(defn- comment-form? [zloc]
+  (when-some [zloc-c (z/down zloc)]
+    (let [node (z/node zloc-c)]
+      (and (node/symbol-node? node) (= "comment" (node/string node))))))
 
 (defn delete-if-empty!
   "Deletes a file if it is considered empty."
@@ -201,11 +207,10 @@
   (try
     (let [file (->out-file file out-dir)
           zloc (z/of-file file)
-          ;; zloc of the first non-whitespace/non-comment child node or `nil`
-          zloc-c (z/down zloc)
-          empty? (and (some? zloc-c)
-                      (ns-declaration? zloc-c)
-                      (z/rightmost? zloc))]
+          empty? (and (ns-declaration? zloc)
+                      (z/end? (z/skip z/right
+                                      (some-fn ns-declaration? comment-form?)
+                                      zloc)))]
       (when empty?
         (when-not silent (println "Deleting empty file" (.getCanonicalPath file)))
         (io/delete-file file)))
