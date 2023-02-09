@@ -12,7 +12,19 @@ Carve will search through your code for unused vars and will remove them.
 
 ## Installation
 
-Add to your `deps.edn` or `bb.edn`:
+Add to your `deps.edn`:
+
+``` clojure
+:aliases {
+  ...
+  :carve {:extra-deps {io.github.borkdude/carve {:git/url "https://github.com/borkdude/carve"
+                                                 :git/sha "<SHA>"}}
+          :main-opts  ["-m" "carve.main"]}
+  ...
+}
+```
+
+or to your `bb.edn`:
 
 ``` clojure
 io.github.borkdude/carve {:git/url "https://github.com/borkdude/carve"
@@ -71,11 +83,17 @@ bb -x carve.api/carve! --paths src test
 
 #### Clojure
 
+On the JVM:
+
 ```
 clojure -M:carve --paths src test
 ```
 
-on the JVM.
+You may provide options as an EDN literal with `--opts`, e.g.:
+
+``` shell
+clojure -M:carve --opts '{:paths ["src" "test"] :report {:format :text}}'
+```
 
 #### Clojure tool
 
