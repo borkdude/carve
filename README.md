@@ -95,6 +95,12 @@ You may provide options as an EDN literal with `--opts`, e.g.:
 clojure -M:carve --opts '{:paths ["src" "test"] :report {:format :text}}'
 ```
 
+To also load the config file in `.carve/config.edn` when passing `--opts`, set `:merge-config`:
+
+```shell
+clojure -M:carve --opts '{:interactive true :merge-config true}'
+```
+
 #### Clojure tool
 
 As a [clojure tool](https://clojure.org/reference/deps_and_cli#_tool_usage):
@@ -110,7 +116,8 @@ Run `carve --help` to see options.
 You can also store the config for your project in `.carve/config.edn`. When
 invoking carve with no options, the options in `.carve/config.edn` will be used.
 When providing options, the CLI options will take precedence over the configuration
-in`.carve/config.edn`.
+in `.carve/config.edn` and the file will be ignored. Pass `:merge-config` from the 
+CLI to also load and merge `.carve/config.edn`.
 
 All options:
 
@@ -122,6 +129,7 @@ All options:
   by default.
 - `:interactive`: ask what to do with an unused var: remove from the file, add
   to `.carve/ignore` or continue. Set to `true` by default.
+- `:merge-config`: Merge the CLI options and the config file together. Default is false.
 - `:out-dir`: instead of writing back to the original file, write to this dir.
 - `:dry-run`: just print the unused var expression.
 - `:aggressive`: runs multiple times until no unused vars are left. Defaults to `false`.
