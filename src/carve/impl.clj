@@ -306,7 +306,9 @@
     (throw (ex-info "Path not found" {:paths paths}))))
 
 (defn load-opts
-  "Load options, giving higher precedence to options passed from the CLI"
+  "Load options, giving higher precedence to options passed from the CLI.
+
+  If :merge-config is set from the CLI, also merge in the config file."
   [config opts]
   (let [opts (if (:merge-config opts)
                (if config (merge config opts)
@@ -315,12 +317,16 @@
     (validate-opts! opts)
     opts))
 
+(defn load-config-file
+  []
+  (let [config-file (io/file ".carve/config.edn")]
+    (when (.exists config-file)
+      (edn/read-string (slurp config-file)))))
+
 (defn run+
   ([] (run+ nil))
   ([opts]
-   (let [config-file (io/file ".carve/config.edn")
-         config (when (.exists config-file)
-                  (edn/read-string (slurp config-file)))
+   (let [config (load-config-file)
          opts (load-opts config opts)
          report (do-run! opts)]
      {:report report

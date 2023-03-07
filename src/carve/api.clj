@@ -51,9 +51,7 @@
   {:org.babashka/cli cli-opts}
   [opts] ;; to validate opts with spec, load carve.specs
   (let [opts (or (:opts opts) opts)
-        config-file (io/file ".carve/config.edn")
-        config (when (.exists config-file)
-                 (edn/read-string (slurp config-file)))]
+        config (impl/load-config-file)]
     (if (and (empty? opts) (not config))
       (binding [*err* *out*]
         (print-help)
@@ -61,7 +59,7 @@
       (if (:help opts)
         (do (print-help)
             {:exit-code 0})
-        (let [{:keys [:report :config]} (impl/run+ opts)
+        (let [{:keys [:report :config]} (impl/run+ opts) ;; run+ will also call (impl/load-config-file)
                 format (or (:report-format opts)
                            (-> config :report :format))]
             (when (:report config)
