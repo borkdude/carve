@@ -186,22 +186,23 @@
           (println (str "Exception thrown when analyzing " file "."))
           (println e))))))
 
-(defn ignore? [api-namespaces {:keys [:ns :export :defined-by :test :private :name]}]
-  (or
-   test
-   export
-   (when (contains? api-namespaces ns)
-     (not private))
-   (= (str name) "-main")
-   (and defined-by
-        (let [ns (namespace defined-by)
-              nm (clojure.core/name defined-by)]
-          (and (or (= "clojure.core" ns)
-                   (= "cljs.core" ns))
-               (or (= "deftype" nm)
-                   (= "defrecord" nm)
-                   (= "defprotocol" nm)
-                   (= "definterface" nm)))))))
+(defn ignore? [api-namespaces {:keys [:ns :export :defined-by :defined-by->lint-as :test :private :name]}]
+  (let [defined-by (or defined-by->lint-as defined-by)]
+    (or
+     test
+     export
+     (when (contains? api-namespaces ns)
+       (not private))
+     (= (str name) "-main")
+     (and defined-by
+          (let [ns (namespace defined-by->lint-as)
+                nm (clojure.core/name defined-by->lint-as)]
+            (and (or (= "clojure.core" ns)
+                     (= "cljs.core" ns))
+                 (or (= "deftype" nm)
+                     (= "defrecord" nm)
+                     (= "defprotocol" nm)
+                     (= "definterface" nm))))))))
 
 (defn reportize [results]
   (sort-by (juxt :filename :row :col)
