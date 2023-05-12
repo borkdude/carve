@@ -195,8 +195,8 @@
        (not private))
      (= (str name) "-main")
      (and defined-by
-          (let [ns (namespace defined-by->lint-as)
-                nm (clojure.core/name defined-by->lint-as)]
+          (let [ns (namespace defined-by)
+                nm (clojure.core/name defined-by)]
             (and (or (= "clojure.core" ns)
                      (= "cljs.core" ns))
                  (or (= "deftype" nm)
