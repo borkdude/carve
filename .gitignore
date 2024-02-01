@@ -8,3 +8,4 @@
 /.lsp/.cache
 /.clj-kondo/.cache
 carve.build_artifacts.txt
+src/scratch.cljs
